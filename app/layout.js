@@ -13,7 +13,7 @@ const inter = Inter({
 
 export const metadata = {
   title: 'Adroan — Technology built with communities, for communities',
-  description: '[Placeholder — pending content]',
+  description: 'Technology built with communities, for communities.',
 };
 
 export default function RootLayout({ children }) {
