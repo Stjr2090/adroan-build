@@ -1,13 +1,12 @@
 import Link from 'next/link';
-import Reveal from '@/components/Reveal';
 import PageHeader from '@/components/PageHeader';
-import Placeholder from '@/components/Placeholder';
+import Reveal from '@/components/Reveal';
 
 export default function HomePage() {
   return (
     <div className="page-wrap">
       <PageHeader title="Technology built with communities, for communities">
-        <Placeholder className="intro">[Placeholder — pending content]</Placeholder>
+        <p className="intro">Adroan is a technology company in Kampala, Uganda.</p>
         <Link href="/contact" className="button">
           Contact us
         </Link>
@@ -15,7 +14,14 @@ export default function HomePage() {
 
       <Reveal as="section" className="section">
         <h2>What we do</h2>
-        <Placeholder>[Placeholder — pending content]</Placeholder>
+        <p>
+          Our first project is HINGA — technology built with communities, for
+          communities. See it at{' '}
+          <a href="https://hingaai.tech" target="_blank" rel="noopener noreferrer">
+            hingaai.tech
+          </a>
+          .
+        </p>
       </Reveal>
     </div>
   );

@@ -1,11 +1,10 @@
 import PageHeader from '@/components/PageHeader';
-import Placeholder from '@/components/Placeholder';
 
 export default function ContactPage() {
   return (
     <div className="page-wrap">
       <PageHeader title="Contact">
-        <Placeholder className="intro">[Placeholder — pending content]</Placeholder>
+        <p className="intro">Adroan is based in Kampala, Uganda.</p>
         <p>Contact details to be added.</p>
       </PageHeader>
     </div>
