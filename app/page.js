@@ -12,16 +12,45 @@ export default function HomePage() {
         </Link>
       </PageHeader>
 
-      <Reveal as="section" className="section">
-        <h2>What we do</h2>
-        <p>
-          Our first project is HINGA — technology built with communities, for
-          communities. See it at{' '}
+      <Reveal as="section" className="home-explore" aria-label="Explore Adroan">
+        <h2>Explore</h2>
+
+        <details>
+          <summary>About</summary>
+          <p>
+            We build technology with communities, for communities — a small
+            team in Kampala, Uganda.
+          </p>
+          <Link href="/about">Read about Adroan</Link>
+        </details>
+
+        <details>
+          <summary>Team</summary>
+          <p>
+            Three co-founders lead Adroan: engineering, business
+            development and legal.
+          </p>
+          <Link href="/team">Meet the team</Link>
+        </details>
+
+        <details>
+          <summary>Contact</summary>
+          <p>Kampala, Uganda. Contact details to be added.</p>
+          <Link href="/contact">Go to Contact</Link>
+        </details>
+
+        <details className="home-fact-hinga">
+          <summary>HINGA — our first project</summary>
+          <p>
+            HINGA is technology built with communities, for communities —
+            Adroan&apos;s first project.
+          </p>
           <a href="https://hingaai.tech" target="_blank" rel="noopener noreferrer">
-            hingaai.tech
+            Visit hingaai.tech
           </a>
-          .
-        </p>
+          {' · '}
+          <Link href="/hinga">Open the HINGA page</Link>
+        </details>
       </Reveal>
     </div>
   );
