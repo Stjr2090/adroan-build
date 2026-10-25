@@ -3,11 +3,14 @@
 import { useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 
+const THEMED_PATH = '/hinga';
+
 export default function ViewTransitionSetup() {
   const pathname = usePathname();
   const prevPathname = useRef(null);
 
   useEffect(() => {
+    const root = document.documentElement;
     if (prevPathname.current === null) {
       prevPathname.current = pathname;
       return;
@@ -22,9 +25,23 @@ export default function ViewTransitionSetup() {
       const prefersReducedMotion =
         typeof window.matchMedia === 'function' &&
         window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (!prefersReducedMotion) {
-        document.startViewTransition(() => {});
+      if (prefersReducedMotion) return;
+
+      // Theme-change curtain: entering /hinga sweeps the HINGA-themed page
+      // in from the top; leaving sweeps it out upward. The curtain styling
+      // is keyed off data-theme-wipe in app/page-transitions.css; the
+      // attribute is removed as soon as the transition finishes.
+      // Same-palette navigations keep the plain 180ms cross-fade.
+      if (pathname === THEMED_PATH) {
+        root.setAttribute('data-theme-wipe', 'hinga');
+      } else if (root.hasAttribute('data-theme-wipe')) {
+        root.setAttribute('data-theme-wipe', 'adroan');
+      } else {
+        root.removeAttribute('data-theme-wipe');
       }
+
+      const transition = document.startViewTransition(() => {});
+      transition.finished.finally(() => root.removeAttribute('data-theme-wipe'));
     }
   }, [pathname]);
 
