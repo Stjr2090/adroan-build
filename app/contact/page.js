@@ -1,13 +1,12 @@
-import Reveal from '@/components/Reveal';
+import PageHeader from '@/components/PageHeader';
 
 export default function ContactPage() {
   return (
     <div className="page-wrap">
-      <Reveal as="section" className="page-header">
-        <h1>Contact</h1>
+      <PageHeader title="Contact">
         <p className="intro">[Placeholder — pending content]</p>
         <p>Contact details to be added.</p>
-      </Reveal>
+      </PageHeader>
     </div>
   );
 }
