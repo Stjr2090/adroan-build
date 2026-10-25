@@ -1,0 +1,4 @@
+# identity-commit-allowlist.txt — terms exempt only in commit messages.
+# One term per line; the scanner removes it from a commit message before
+# matching. Never exempted in tracked files, PR titles or PR bodies.
+179804353+Stjr2090@users.noreply.github.com
