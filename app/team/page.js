@@ -20,12 +20,17 @@ export default function TeamPage() {
     <div className="page-wrap">
       <Reveal as="section" className="page-header">
         <h1>Team</h1>
+        <p className="intro">A small team in Kampala</p>
       </Reveal>
 
       <Reveal as="section" className="section">
         <div className="team-grid">
-          {members.map((member) => (
-            <div key={member.name} className="team-card">
+          {members.map((member, index) => (
+            <div
+              key={member.name}
+              className={`team-card${index === 0 ? ' team-card-accent' : ''}`}
+            >
+              <div className="team-photo" aria-hidden="true" />
               <p className="team-name">{member.name}</p>
               <p className="team-role">{member.role}</p>
             </div>

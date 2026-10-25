@@ -35,4 +35,12 @@
     transform: none !important;
     transition: none !important;
   }
+
+  .team-photo {
+    transition: none !important;
+  }
+
+  .team-card:hover .team-photo {
+    transform: none !important;
+  }
 }
