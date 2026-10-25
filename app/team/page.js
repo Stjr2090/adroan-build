@@ -1,4 +1,5 @@
 import Reveal from '@/components/Reveal';
+import PageHeader from '@/components/PageHeader';
 
 const members = [
   {
@@ -18,10 +19,9 @@ const members = [
 export default function TeamPage() {
   return (
     <div className="page-wrap">
-      <Reveal as="section" className="page-header">
-        <h1>Team</h1>
+      <PageHeader title="Team">
         <p className="intro">A small team in Kampala</p>
-      </Reveal>
+      </PageHeader>
 
       <Reveal as="section" className="section">
         <div className="team-grid">
