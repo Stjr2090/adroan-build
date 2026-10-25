@@ -1,0 +1,7 @@
+# identity-allowlist.txt — one allowed term per line.
+# A line of scanned text is exempt from check-identity.sh when it contains
+# one of these terms as an exact substring. Comments (#) and blank lines
+# are ignored.
+Notion
+notion
+127.0.0.1
