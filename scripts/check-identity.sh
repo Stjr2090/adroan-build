@@ -10,6 +10,7 @@ set -euo pipefail
 
 cd "$(git rev-parse --show-toplevel)"
 ALLOW_FILE=identity-allowlist.txt
+COMMIT_ALLOW_FILE=identity-commit-allowlist.txt
 if [ ! -f "$ALLOW_FILE" ]; then
   echo "check-identity: $ALLOW_FILE missing" >&2
   exit 1
@@ -21,7 +22,7 @@ shopt -s nocasematch
 PAT='\b(Fo|Stephen|Tumusiime|Stjr2090|Musiime|Musiime-1|M-1|Jagent|Think|think-1|Wajo|Obbo|obbo-back|Agent-X|R-1|R-2|OCI-H1|Wabi|Pally|Hermes|OpenClaw|opencode|InstaBox|open-vin|Townie|MiniMax|DeepSeek|Kimi|GLM)\b|[0-9]{17,20}|[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)+|ntn_[A-Za-z0-9]{20,}|sk-[A-Za-z0-9_-]{20,}|ghp_[A-Za-z0-9]{20,}|xox[bap]-[A-Za-z0-9-]{10,}|[0-9a-f]{32}'
 # The scanner's own source legitimately contains the blocklist;
 # the allowlist file may name allowed terms only.
-SCAN_PATHS=(-- . ':(exclude)scripts/check-identity.sh')
+SCAN_PATHS=(-- . ':(exclude)scripts/check-identity.sh' ':(exclude)identity-commit-allowlist.txt')
 
 violate() {
   local line="$1" term
@@ -30,6 +31,19 @@ violate() {
     line=${line//"$term"/}
   done < "$ALLOW_FILE"
   [[ "$line" =~ $PAT ]]
+}
+
+# Commit-message-only exemptions: stripped before matching, never applied
+# to tracked files, PR titles or PR bodies. File is optional.
+strip_commit_allow() {
+  local line="$1" term
+  if [ -f "$COMMIT_ALLOW_FILE" ]; then
+    while IFS= read -r term; do
+      case "$term" in ''|'#'*) continue ;; esac
+      line=${line//"$term"/}
+    done < "$COMMIT_ALLOW_FILE"
+  fi
+  printf '%s' "$line"
 }
 
 flag() {
@@ -70,6 +84,7 @@ scan_env_text "PR body (rules: identity-allowlist.txt)" "${SCAN_PR_BODY:-}"
 # With an argument (commit-msg hook), scan that message file instead.
 if [ $# -ge 1 ]; then
   while IFS= read -r msg; do
+    msg=$(strip_commit_allow "$msg")
     if violate "$msg"; then
       flag "commit message: $msg" "$msg"
       fail=1
@@ -88,6 +103,7 @@ elif git rev-parse --verify --quiet origin/main >/dev/null; then
           continue
         fi
       fi
+      msg=$(strip_commit_allow "$msg")
       if violate "$msg"; then
         flag "commit message: $msg" "$msg"
         fail=1
