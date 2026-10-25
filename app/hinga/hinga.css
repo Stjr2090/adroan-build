@@ -1,0 +1,43 @@
+/* HINGA page palette — scoped to .hinga-page only (no :root changes) */
+
+.hinga-page {
+  --hinga-green: #2D5A27;
+  --hinga-ink: #233122;
+  --hinga-bg: #F3F5F0;
+  --hinga-secondary: #899187;
+}
+
+.hinga-page {
+  color: var(--hinga-ink);
+  background-color: var(--hinga-bg);
+  border: 1px solid var(--hinga-secondary);
+  border-radius: var(--radius);
+  padding: 2rem;
+  margin-top: 1rem;
+}
+
+/* Accent overrides — active inside .hinga-page only */
+
+.hinga-page .page-header::before {
+  background-color: var(--hinga-green);
+}
+
+.hinga-page a {
+  color: var(--hinga-green);
+}
+
+.hinga-page .section {
+  border-top-color: var(--hinga-secondary);
+}
+
+.hinga-fact {
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+  color: var(--hinga-secondary);
+}
+
+.hinga-link {
+  display: inline-block;
+  margin-top: 1.75rem;
+  font-weight: 600;
+}
