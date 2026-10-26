@@ -2,12 +2,14 @@
 
 import { useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
+import usePrefersReducedMotion from '@/hooks/usePrefersReducedMotion';
 
 const THEMED_PATH = '/hinga';
 
 export default function ViewTransitionSetup() {
   const pathname = usePathname();
   const prevPathname = useRef(null);
+  const prefersReducedMotion = usePrefersReducedMotion();
 
   useEffect(() => {
     const root = document.documentElement;
@@ -22,9 +24,6 @@ export default function ViewTransitionSetup() {
       typeof document !== 'undefined' &&
       typeof document.startViewTransition === 'function'
     ) {
-      const prefersReducedMotion =
-        typeof window.matchMedia === 'function' &&
-        window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       if (prefersReducedMotion) return;
 
       // Theme-change curtain: entering /hinga sweeps the HINGA-themed page
@@ -43,7 +42,7 @@ export default function ViewTransitionSetup() {
       const transition = document.startViewTransition(() => {});
       transition.finished.finally(() => root.removeAttribute('data-theme-wipe'));
     }
-  }, [pathname]);
+  }, [pathname, prefersReducedMotion]);
 
   return null;
 }

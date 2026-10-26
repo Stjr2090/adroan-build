@@ -1,18 +1,17 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import usePrefersReducedMotion from '@/hooks/usePrefersReducedMotion';
 
 export default function Reveal({ as: Tag = 'div', className = '', children, ...rest }) {
   const ref = useRef(null);
+  const prefersReducedMotion = usePrefersReducedMotion();
 
   useEffect(() => {
     const node = ref.current;
     if (!node) return undefined;
 
-    const reducedMotion =
-      typeof window.matchMedia === 'function' &&
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reducedMotion) return undefined;
+    if (prefersReducedMotion) return undefined;
 
     if (typeof IntersectionObserver !== 'function') return undefined;
 
@@ -32,7 +31,7 @@ export default function Reveal({ as: Tag = 'div', className = '', children, ...r
 
     observer.observe(node);
     return () => observer.disconnect();
-  }, []);
+  }, [prefersReducedMotion]);
 
   return (
     <Tag ref={ref} className={className} {...rest}>

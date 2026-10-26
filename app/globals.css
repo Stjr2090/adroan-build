@@ -5,7 +5,13 @@
   --white: #FFFFFF;
   --radius: 12px;
   --shadow: 0 2px 10px rgba(23, 33, 43, 0.06);
-  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --motion-duration-fast: 160ms;
+  --motion-duration-base: 280ms;
+  --motion-duration-slow: 560ms;
+  --motion-stagger: 60ms;
+  --motion-rise: 16px;
+  --ease: var(--motion-ease);
 }
 
 * {
@@ -17,6 +23,23 @@
 @media (prefers-reduced-motion: no-preference) {
   html {
     scroll-behavior: smooth;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0ms !important;
+    transition-delay: 0ms !important;
+  }
+
+  .button:hover,
+  .team-card:hover .team-photo {
+    transform: none;
   }
 }
 

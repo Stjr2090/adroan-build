@@ -15,7 +15,7 @@ export default function Nav() {
   const pathname = usePathname();
 
   return (
-    <header className="site-header">
+    <header className="site-header" data-vt="menu-trigger">
       <nav className="nav container" aria-label="Main navigation">
         {links.map((link) => {
           const active = pathname === link.href;

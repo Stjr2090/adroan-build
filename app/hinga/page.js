@@ -1,11 +1,13 @@
 import Reveal from '@/components/Reveal';
 import PageHeader from '@/components/PageHeader';
+import HingaMotionFoundation from '@/components/HingaMotionFoundation';
 import './hinga.css';
 
 export default function HingaPage() {
   return (
     <div className="page-wrap hinga-page">
-      <PageHeader title="HINGA">
+      <HingaMotionFoundation />
+      <PageHeader title="HINGA" data-vt="hinga-header">
         <p className="intro">
           Agricultural guidance in farmers' languages, designed to support
           safer decisions
@@ -21,7 +23,7 @@ export default function HingaPage() {
         </a>
       </PageHeader>
 
-      <Reveal as="section" className="section">
+      <Reveal as="section" className="section" data-vt="hinga-card">
         <p>Full story coming after market research.</p>
       </Reveal>
     </div>
