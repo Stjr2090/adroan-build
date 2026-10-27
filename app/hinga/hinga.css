@@ -1,97 +1,60 @@
-/* HINGA theme — Task 3b.
-   Whole-page theme scoped to /hinga: html:has(.hinga-page) restyles the shared
-   nav, background, text and footer while the HINGA page is mounted, and reverts
-   on navigation away (no JavaScript). Where :has() is unsupported the page
-   keeps its own scoped colors via .hinga-page below and everything else stays
-   on the Adroan theme — usable, just not re-themed.
+/* HINGA page — wireframe v3 separate-pages card: a dark (Ember Dusk) page
+   with an image block and text lines. All motion/theming follows the
+   shared site tokens; the site header picks up its dark scene colours
+   through html[data-scene='hinga'] in globals.css. */
 
-   Palette discipline: exactly the four approved HINGA values. Every derived
-   tint (hairlines, translucent header fill) is a mix of those four, so the
-   site-wide hex budget is untouched. */
-
-/* Page-scoped tokens (fallback scope, also used by content rules below) */
 .hinga-page {
-  --hinga-green: #2D5A27;
-  --hinga-ink: #233122;
-  --hinga-bg: #F3F5F0;
-  --hinga-secondary: #899187;
+  background:
+    radial-gradient(48rem 32rem at 85% 10%, rgba(90, 46, 58, 0.45), transparent 70%),
+    radial-gradient(40rem 28rem at 8% 82%, rgba(43, 53, 80, 0.5), transparent 70%),
+    var(--ink);
+  color: var(--warm-white);
 }
 
-/* Whole-page scope: tokens lifted to the root so nav/footer/body can use them */
-html:has(.hinga-page) {
-  --hinga-green: #2D5A27;
-  --hinga-ink: #233122;
-  --hinga-bg: #F3F5F0;
-  --hinga-secondary: #899187;
+.hinga-page .page-header,
+.hinga-page .hinga-figure,
+.hinga-page .hinga-more {
+  max-width: 44rem;
 }
 
-html:has(.hinga-page) body {
-  background-color: var(--hinga-bg);
-  color: var(--hinga-ink);
-}
-
-/* Header: translucent warm-green bar with blur, like the HINGA site header */
-html:has(.hinga-page) .site-header {
-  position: sticky;
-  top: 0;
-  z-index: 20;
-  background-color: color-mix(in srgb, var(--hinga-bg) 92%, transparent);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
-  border-bottom-color: color-mix(in srgb, var(--hinga-ink) 8%, transparent);
-}
-
-html:has(.hinga-page) .nav-link {
-  color: var(--hinga-ink);
-}
-
-html:has(.hinga-page) .nav-link:hover,
-html:has(.hinga-page) .nav-link:focus-visible,
-html:has(.hinga-page) .nav-link[aria-current="page"] {
-  color: var(--hinga-green);
-  border-bottom-color: var(--hinga-green);
-}
-
-/* Footer inherits the themed background; note text follows the ink swap */
-html:has(.hinga-page) .footer-note {
-  color: var(--hinga-ink);
-}
-
-html:has(.hinga-page) .hinga-page {
-  /* Themed mode: page background and content share the HINGA background, so
-     the task-3 card outline reads as a stray float line — flatten it. The
-     border remains in fallback mode (no :has), where the card look still
-     carries the design. */
-  border-color: transparent;
-}
-
-/* Content theming — active with or without :has() support */
-.hinga-page {
-  color: var(--hinga-ink);
-}
-
-/* Accent overrides — active inside .hinga-page only */
-
-.hinga-page .page-header::before {
-  background-color: var(--hinga-green);
+.hinga-page .intro {
+  color: rgba(255, 253, 248, 0.82);
 }
 
 .hinga-page a {
-  color: var(--hinga-green);
-}
-
-.hinga-page .section {
-  border-top-color: color-mix(in srgb, var(--hinga-ink) 8%, transparent);
+  color: var(--coral);
 }
 
 .hinga-fact {
   margin-top: 0.75rem;
   font-size: 0.9rem;
-  color: var(--hinga-green);
+  color: var(--coral);
+}
+
+.hinga-figure {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 16 / 9;
+  min-height: 16rem;
+  margin-top: 3rem;
+  border: 1px solid rgba(255, 253, 248, 0.15);
+  border-radius: 12px;
+  background-color: rgba(255, 253, 248, 0.06);
+  color: rgba(255, 253, 248, 0.35);
+  font-size: 0.875rem;
+}
+
+.hinga-more {
+  margin-top: 2.5rem;
+}
+
+.hinga-more p {
+  color: rgba(255, 253, 248, 0.75);
 }
 
 .hinga-link {
   display: inline-block;
-  margin-top: 1.75rem;
+  margin-top: 1.5rem;
   font-weight: 600;
 }
