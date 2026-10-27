@@ -6,7 +6,6 @@ import ViewTransitionSetup from '@/components/ViewTransitionSetup';
 
 const inter = Inter({
   subsets: ['latin'],
-  weight: ['400', '600'],
   variable: '--font-inter',
   display: 'swap',
 });
