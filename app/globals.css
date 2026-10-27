@@ -463,6 +463,9 @@ html.has-smooth-scroll {
   inset: 0;
   z-index: 1;
   pointer-events: none;
+  /* Colour values mirror the Phase 0 tokens (dusk-1 #17212B, dusk-2 #2B3550,
+     dusk-3 #5A2E3A). Gradients need per-stop alpha, so the values repeat here;
+     retune both together. */
   background-image:
     linear-gradient(
       90deg,
@@ -474,9 +477,12 @@ html.has-smooth-scroll {
     ),
     linear-gradient(
       0deg,
-      rgba(23, 33, 43, 0.7) 0%,
-      rgba(43, 53, 80, 0.22) 32%,
-      rgba(23, 33, 43, 0) 58%
+      rgba(23, 33, 43, 0.88) 0%,
+      rgba(23, 33, 43, 0.82) 40%,
+      rgba(23, 33, 43, 0.66) 56%,
+      rgba(23, 33, 43, 0.6) 64%,
+      rgba(23, 33, 43, 0.4) 70%,
+      rgba(23, 33, 43, 0) 80%
     );
 }
 
@@ -536,6 +542,6 @@ html.has-smooth-scroll {
         rgba(43, 53, 80, 0.62) 78%,
         rgba(90, 46, 58, 0.32) 100%
       ),
-      linear-gradient(0deg, rgba(23, 33, 43, 0.85) 0%, rgba(23, 33, 43, 0) 62%);
+      linear-gradient(0deg, rgba(23, 33, 43, 0.86) 0%, rgba(23, 33, 43, 0.8) 52%, rgba(23, 33, 43, 0.62) 64%, rgba(23, 33, 43, 0.4) 72%, rgba(23, 33, 43, 0) 82%);
   }
 }
