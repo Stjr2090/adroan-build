@@ -3,7 +3,7 @@
   --warm-white: #FFFDF8;
   --ink: #17212B;
   --coral: #E86A45;
-  --coral-dark: #C9532F; /* background for small white text: white on #E86A45 is ~3.2:1 */
+  --coral-dark: #C84F2A; /* dark enough for white text at AA: 4.56:1 with #FFFFFF (white on #E86A45 is ~3.2:1) */
   --white: #FFFFFF;
 
   /* Sunrise Coral (light scenes) */
