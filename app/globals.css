@@ -3,8 +3,10 @@
   --warm-white: #FFFDF8;
   --ink: #17212B;
   --coral: #E86A45;
-  /* Darker coral behind small white text (#E86A45 only reaches ~3.2:1). */
-  --coral-deep: #C9532F;
+  /* Darker coral behind small white text (#E86A45 only reaches ~3.2:1;
+     one-step darkening of the brief's #C9532F to clear 4.5:1 WCAG AA —
+     measured 4.55:1 with white). */
+  --coral-deep: #C5522E;
   --white: #FFFFFF;
   /* Sunrise Coral (light) */
   --sun-2: #FFD9C2;

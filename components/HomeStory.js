@@ -56,7 +56,13 @@ export default function HomeStory() {
 
     return () => {
       ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-      gsap.set(['.hero-photo', '.hinga-copy'], { clearProps: 'all' });
+      // Guard the reset with a live-node check: on client-side navigation the
+      // old page's nodes are already gone when this runs, and re-selecting by
+      // class would only log a "target not found" warning.
+      const targets = [photo, hingaCopy].filter((el) => el && el.isConnected);
+      if (targets.length) {
+        gsap.set(targets, { clearProps: 'all' });
+      }
     };
   }, []);
 
