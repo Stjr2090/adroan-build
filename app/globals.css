@@ -59,6 +59,7 @@ body {
   font-size: 1rem;
   line-height: 1.6;
   min-height: 100vh;
+  overflow-x: clip;
 }
 
 a {
@@ -390,4 +391,115 @@ h2 {
 .home-fact-hinga[open] summary::after,
 .home-fact-hinga[open] summary {
   color: #2D5A27;
+}
+
+/* Smooth scroll (Lenis). Loaded on demand, desktop pointers only. */
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+/* Landing scene */
+
+.landing {
+  /* Drop the approved full-bleed photo in here, e.g.
+     --landing-photo: url('/landing.jpg'); once the asset is supplied. */
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  width: 100vw;
+  min-height: calc(100vh - 7rem);
+  min-height: calc(100svh - 7rem);
+  margin: 0 0 2.5rem;
+  margin-left: calc(50% - 50vw);
+  overflow: hidden;
+  background-color: var(--dusk-1);
+  color: var(--warm-white);
+}
+
+.landing-photo {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-color: var(--dusk-2);
+  background-image: var(--landing-photo, radial-gradient(120% 100% at 66% 42%, var(--dusk-3) 0%, var(--dusk-2) 45%, var(--dusk-1) 78%));
+  background-position: center;
+  background-size: cover;
+  -webkit-mask-image: radial-gradient(125% 105% at 66% 42%, #000 38%, rgba(0, 0, 0, 0.6) 60%, transparent 82%);
+  mask-image: radial-gradient(125% 105% at 66% 42%, #000 38%, rgba(0, 0, 0, 0.6) 60%, transparent 82%);
+}
+
+.landing::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background-image: linear-gradient(
+    90deg,
+    rgba(23, 33, 43, 0.94) 0%,
+    rgba(23, 33, 43, 0.7) 42%,
+    rgba(23, 33, 43, 0.15) 100%
+  );
+}
+
+.landing::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0.1;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 140px 140px;
+}
+
+.landing-inner {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  padding-top: 6rem;
+  padding-bottom: 4rem;
+}
+
+.landing-title {
+  max-width: 52rem;
+  font-size: clamp(2.1rem, 4.2vw, 3.5rem);
+  font-weight: 500;
+  line-height: 1.06;
+  letter-spacing: -0.025em;
+  color: var(--warm-white);
+}
+
+.landing-intro {
+  max-width: 34rem;
+  margin-top: 1.1rem;
+  font-size: 1rem;
+  color: rgba(255, 253, 248, 0.78);
+}
+
+@media (max-width: 47.99rem) {
+  .landing {
+    min-height: 66vh;
+  }
+
+  .landing-inner {
+    padding-top: 4rem;
+    padding-bottom: 2.5rem;
+  }
 }
