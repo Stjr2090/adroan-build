@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { easeFluid } from '@/lib/motion';
+import { DURATION, easeFluid } from '@/lib/motion';
 
 /* Lenis runs on desktop pointers only; touch devices keep native scrolling. */
 const DESKTOP_QUERY = '(min-width: 1024px) and (pointer: fine)';
@@ -56,7 +56,7 @@ export default function SmoothScroll() {
       gsapInstance.registerPlugin(ScrollTrigger);
 
       lenis = new Lenis({
-        duration: 1.1,
+        duration: DURATION.slow,
         easing: easeFluid,
       });
 
