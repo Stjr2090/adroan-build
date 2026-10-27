@@ -1,4 +1,4 @@
-﻿::view-transition-old(root),
+::view-transition-old(root),
 ::view-transition-new(root) {
   animation-duration: var(--dur-fast);
   animation-timing-function: var(--ease-fluid);
