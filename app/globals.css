@@ -427,19 +427,19 @@ html.has-smooth-scroll {
 /* Landing scene */
 
 .landing {
-  /* Drop the approved full-bleed photo in here, e.g.
-     --landing-photo: url('/landing.jpg'); once the asset is supplied. */
   position: relative;
   isolation: isolate;
   display: flex;
   align-items: center;
   width: 100vw;
-  min-height: calc(100vh - 7rem);
-  min-height: calc(100svh - 7rem);
-  margin: 0 0 2.5rem;
-  margin-left: calc(50% - 50vw);
+  min-height: 100vh;
+  min-height: 100svh;
+  margin: 0 0 0 calc(50% - 50vw);
   overflow: hidden;
   background-color: var(--dusk-1);
+  background-image:
+    radial-gradient(90% 80% at 82% 22%, rgba(232, 106, 69, 0.24) 0%, rgba(232, 106, 69, 0) 58%),
+    linear-gradient(135deg, var(--dusk-1) 0%, var(--dusk-2) 52%, var(--dusk-3) 100%);
   color: var(--warm-white);
 }
 
@@ -448,11 +448,13 @@ html.has-smooth-scroll {
   inset: 0;
   z-index: 0;
   background-color: var(--dusk-2);
-  background-image: var(--landing-photo, radial-gradient(120% 100% at 66% 42%, var(--dusk-3) 0%, var(--dusk-2) 45%, var(--dusk-1) 78%));
-  background-position: center;
-  background-size: cover;
-  -webkit-mask-image: radial-gradient(125% 105% at 66% 42%, #000 38%, rgba(0, 0, 0, 0.6) 60%, transparent 82%);
-  mask-image: radial-gradient(125% 105% at 66% 42%, #000 38%, rgba(0, 0, 0, 0.6) 60%, transparent 82%);
+  -webkit-mask-image: radial-gradient(135% 120% at 68% 46%, #000 55%, rgba(0, 0, 0, 0.78) 74%, transparent 94%);
+  mask-image: radial-gradient(135% 120% at 68% 46%, #000 55%, rgba(0, 0, 0, 0.78) 74%, transparent 94%);
+}
+
+.landing-photo-img {
+  object-fit: cover;
+  object-position: center 58%;
 }
 
 .landing::before {
@@ -461,12 +463,21 @@ html.has-smooth-scroll {
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  background-image: linear-gradient(
-    90deg,
-    rgba(23, 33, 43, 0.94) 0%,
-    rgba(23, 33, 43, 0.7) 42%,
-    rgba(23, 33, 43, 0.15) 100%
-  );
+  background-image:
+    linear-gradient(
+      90deg,
+      rgba(23, 33, 43, 0.92) 0%,
+      rgba(23, 33, 43, 0.8) 34%,
+      rgba(43, 53, 80, 0.5) 60%,
+      rgba(90, 46, 58, 0.18) 80%,
+      rgba(90, 46, 58, 0) 95%
+    ),
+    linear-gradient(
+      0deg,
+      rgba(23, 33, 43, 0.7) 0%,
+      rgba(43, 53, 80, 0.22) 32%,
+      rgba(23, 33, 43, 0) 58%
+    );
 }
 
 .landing::after {
@@ -507,11 +518,24 @@ html.has-smooth-scroll {
 
 @media (max-width: 47.99rem) {
   .landing {
-    min-height: 66vh;
+    min-height: 100vh;
+    min-height: 100svh;
   }
 
   .landing-inner {
     padding-top: 4rem;
     padding-bottom: 2.5rem;
+  }
+
+  .landing::before {
+    background-image:
+      linear-gradient(
+        90deg,
+        rgba(23, 33, 43, 0.95) 0%,
+        rgba(23, 33, 43, 0.9) 46%,
+        rgba(43, 53, 80, 0.62) 78%,
+        rgba(90, 46, 58, 0.32) 100%
+      ),
+      linear-gradient(0deg, rgba(23, 33, 43, 0.85) 0%, rgba(23, 33, 43, 0) 62%);
   }
 }

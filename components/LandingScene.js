@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useEffect, useRef } from 'react';
 import usePrefersReducedMotion from '@/hooks/usePrefersReducedMotion';
 
@@ -65,7 +66,16 @@ export default function LandingScene({ title, intro, children }) {
 
   return (
     <section className="landing" ref={sectionRef} aria-labelledby="landing-title">
-      <div className="landing-photo" ref={photoRef} aria-hidden="true" />
+      <div className="landing-photo" ref={photoRef} aria-hidden="true">
+        <Image
+          src="/landing/kampala-golden-hour.jpg"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="landing-photo-img"
+        />
+      </div>
 
       <div className="landing-inner container">
         <h1 className="landing-title" id="landing-title">

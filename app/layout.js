@@ -24,7 +24,16 @@ export default function RootLayout({ children }) {
         <SmoothScroll />
         <main className="container page">{children}</main>
         <footer className="site-footer container">
-          <p className="footer-note">© Adroan</p>
+          <p className="footer-note">
+            © Adroan ·{' '}
+            <a
+              href="https://unsplash.com/photos/city-skyline-bathed-in-warm-sunset-light-Q3ymlvOJGFs"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Photo: Robin Kutesa on Unsplash
+            </a>
+          </p>
         </footer>
         <ViewTransitionSetup />
       </body>
