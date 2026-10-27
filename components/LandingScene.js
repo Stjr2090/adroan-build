@@ -1,23 +1,22 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import usePrefersReducedMotion from '@/hooks/usePrefersReducedMotion';
 
 /**
  * Landing scene (brief #1319): dark scene, full-bleed photo whose opacity is
- * scrubbed by scroll progress. Reduced motion keeps the photo still.
+ * scrubbed by scroll progress. Reduced motion keeps the photo still, and
+ * switching the preference mid-session tears the scrub down.
  */
 export default function LandingScene({ title, intro, children }) {
   const sectionRef = useRef(null);
   const photoRef = useRef(null);
+  const reducedMotion = usePrefersReducedMotion();
 
   useEffect(() => {
     const section = sectionRef.current;
     const photo = photoRef.current;
-    if (!section || !photo) return undefined;
-
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      return undefined;
-    }
+    if (!section || !photo || reducedMotion) return undefined;
 
     let cancelled = false;
     let revert = () => {};
@@ -62,7 +61,7 @@ export default function LandingScene({ title, intro, children }) {
       cancelled = true;
       revert();
     };
-  }, []);
+  }, [reducedMotion]);
 
   return (
     <section className="landing" ref={sectionRef} aria-labelledby="landing-title">

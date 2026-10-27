@@ -2,10 +2,10 @@
 
 import { useEffect } from 'react';
 import { DURATION, easeFluid } from '@/lib/motion';
+import usePrefersReducedMotion from '@/hooks/usePrefersReducedMotion';
 
 /* Lenis runs on desktop pointers only; touch devices keep native scrolling. */
 const DESKTOP_QUERY = '(min-width: 1024px) and (pointer: fine)';
-const REDUCED_QUERY = '(prefers-reduced-motion: reduce)';
 
 /**
  * Smooth scroll engine. GSAP and Lenis are imported on demand, only when the
@@ -13,13 +13,16 @@ const REDUCED_QUERY = '(prefers-reduced-motion: reduce)';
  * ScrollTrigger reads the smoothed positions.
  */
 export default function SmoothScroll() {
+  const reducedMotion = usePrefersReducedMotion();
+
   useEffect(() => {
     if (typeof window === 'undefined') return undefined;
+    if (reducedMotion) return undefined;
 
     const desktop = window.matchMedia(DESKTOP_QUERY);
-    const reduced = window.matchMedia(REDUCED_QUERY);
 
     let destroyed = false;
+    let starting = false;
     let lenis = null;
     let ticker = null;
     let onScroll = null;
@@ -38,55 +41,62 @@ export default function SmoothScroll() {
     };
 
     const start = async () => {
-      if (destroyed || lenis) return;
-      if (!desktop.matches || reduced.matches) return;
+      if (destroyed || starting || lenis) return;
+      if (!desktop.matches) return;
 
-      const [lenisModule, gsapModule, triggerModule] = await Promise.all([
-        import('lenis'),
-        import('gsap'),
-        import('gsap/ScrollTrigger'),
-      ]);
+      starting = true;
 
-      if (destroyed || lenis) return;
+      try {
+        const [lenisModule, gsapModule, triggerModule] = await Promise.all([
+          import('lenis'),
+          import('gsap'),
+          import('gsap/ScrollTrigger'),
+        ]);
 
-      const Lenis = lenisModule.default;
-      const { gsap: gsapInstance } = gsapModule;
-      const { ScrollTrigger } = triggerModule;
+        if (destroyed || lenis || !desktop.matches) return;
 
-      gsapInstance.registerPlugin(ScrollTrigger);
+        const Lenis = lenisModule.default;
+        const { gsap: gsapInstance } = gsapModule;
+        const { ScrollTrigger } = triggerModule;
 
-      lenis = new Lenis({
-        duration: DURATION.slow,
-        easing: easeFluid,
-      });
+        gsapInstance.registerPlugin(ScrollTrigger);
 
-      onScroll = () => ScrollTrigger.update();
-      lenis.on('scroll', onScroll);
+        lenis = new Lenis({
+          duration: DURATION.slow,
+          easing: easeFluid,
+        });
 
-      ticker = (time) => lenis.raf(time * 1000);
-      gsapInstance.ticker.add(ticker);
-      gsapInstance.ticker.lagSmoothing(0);
+        onScroll = () => ScrollTrigger.update();
+        lenis.on('scroll', onScroll);
 
-      gsap = gsapInstance;
-      document.documentElement.classList.add('has-smooth-scroll');
+        ticker = (time) => lenis.raf(time * 1000);
+        gsapInstance.ticker.add(ticker);
+        gsapInstance.ticker.lagSmoothing(0);
+
+        gsap = gsapInstance;
+        document.documentElement.classList.add('has-smooth-scroll');
+      } finally {
+        starting = false;
+      }
     };
 
     const sync = () => {
+      if (desktop.matches) {
+        start();
+        return;
+      }
       stop();
-      start();
     };
 
     start();
     desktop.addEventListener('change', sync);
-    reduced.addEventListener('change', sync);
 
     return () => {
       destroyed = true;
       desktop.removeEventListener('change', sync);
-      reduced.removeEventListener('change', sync);
       stop();
     };
-  }, []);
+  }, [reducedMotion]);
 
   return null;
 }
