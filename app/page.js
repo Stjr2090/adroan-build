@@ -1,16 +1,16 @@
 import Link from 'next/link';
-import PageHeader from '@/components/PageHeader';
+import HomeHero from '@/components/HomeHero';
 import Reveal from '@/components/Reveal';
 
 export default function HomePage() {
   return (
     <div className="page-wrap">
-      <PageHeader title="Technology built with communities, for communities">
+      <HomeHero>
         <p className="intro">Adroan is a technology company in Kampala, Uganda.</p>
         <Link href="/contact" className="button">
           Contact us
         </Link>
-      </PageHeader>
+      </HomeHero>
 
       <Reveal as="section" className="home-explore" aria-label="Explore Adroan">
         <h2>Explore</h2>

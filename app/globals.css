@@ -99,6 +99,32 @@ h2 {
   background-color: var(--coral);
 }
 
+.home-hero {
+  position: relative;
+  margin-bottom: 2rem;
+  padding-top: 2rem;
+}
+
+.home-hero-accent {
+  display: block;
+  width: 2.5rem;
+  height: 0.5rem;
+  margin-bottom: 1.5rem;
+  border-radius: 999px;
+  background-color: var(--coral);
+  transform-origin: left center;
+}
+
+.home-hero-line {
+  display: block;
+  overflow: hidden;
+}
+
+.home-hero-line-content {
+  display: block;
+  will-change: opacity, transform;
+}
+
 .intro {
   max-width: 38rem;
   margin-top: 1.25rem;
