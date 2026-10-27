@@ -1,16 +1,18 @@
 import Link from 'next/link';
-import PageHeader from '@/components/PageHeader';
+import LandingScene from '@/components/LandingScene';
 import Reveal from '@/components/Reveal';
 
 export default function HomePage() {
   return (
     <div className="page-wrap">
-      <PageHeader title="Technology built with communities, for communities">
-        <p className="intro">Adroan is a technology company in Kampala, Uganda.</p>
+      <LandingScene
+        title="Technology built with communities, for communities"
+        intro="Adroan is a technology company in Kampala, Uganda."
+      >
         <Link href="/contact" className="button">
           Contact us
         </Link>
-      </PageHeader>
+      </LandingScene>
 
       <Reveal as="section" className="home-explore" aria-label="Explore Adroan">
         <h2>Explore</h2>

@@ -67,6 +67,7 @@ body {
   font-size: 1rem;
   line-height: 1.6;
   min-height: 100vh;
+  overflow-x: clip;
 }
 
 a {
@@ -398,4 +399,149 @@ h2 {
 .home-fact-hinga[open] summary::after,
 .home-fact-hinga[open] summary {
   color: #2D5A27;
+}
+
+/* Smooth scroll (Lenis). Loaded on demand, desktop pointers only. */
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+html.has-smooth-scroll {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+/* Landing scene */
+
+.landing {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  width: 100vw;
+  min-height: 100vh;
+  min-height: 100svh;
+  margin: 0 0 0 calc(50% - 50vw);
+  overflow: hidden;
+  background-color: var(--dusk-1);
+  background-image:
+    radial-gradient(90% 80% at 82% 22%, rgba(232, 106, 69, 0.24) 0%, rgba(232, 106, 69, 0) 58%),
+    linear-gradient(135deg, var(--dusk-1) 0%, var(--dusk-2) 52%, var(--dusk-3) 100%);
+  color: var(--warm-white);
+}
+
+.landing-photo {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-color: var(--dusk-2);
+  -webkit-mask-image: radial-gradient(135% 120% at 68% 46%, #000 55%, rgba(0, 0, 0, 0.78) 74%, transparent 94%);
+  mask-image: radial-gradient(135% 120% at 68% 46%, #000 55%, rgba(0, 0, 0, 0.78) 74%, transparent 94%);
+}
+
+.landing-photo-img {
+  object-fit: cover;
+  object-position: center 58%;
+}
+
+.landing::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  /* Colour values mirror the Phase 0 tokens (dusk-1 #17212B, dusk-2 #2B3550,
+     dusk-3 #5A2E3A). Gradients need per-stop alpha, so the values repeat here;
+     retune both together. */
+  background-image:
+    linear-gradient(
+      90deg,
+      rgba(23, 33, 43, 0.92) 0%,
+      rgba(23, 33, 43, 0.8) 34%,
+      rgba(43, 53, 80, 0.5) 60%,
+      rgba(90, 46, 58, 0.18) 80%,
+      rgba(90, 46, 58, 0) 95%
+    ),
+    linear-gradient(
+      0deg,
+      rgba(23, 33, 43, 0.88) 0%,
+      rgba(23, 33, 43, 0.82) 40%,
+      rgba(23, 33, 43, 0.66) 56%,
+      rgba(23, 33, 43, 0.6) 64%,
+      rgba(23, 33, 43, 0.4) 70%,
+      rgba(23, 33, 43, 0) 80%
+    );
+}
+
+.landing::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0.1;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 140px 140px;
+}
+
+.landing-inner {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  padding-top: 6rem;
+  padding-bottom: 4rem;
+}
+
+.landing-title {
+  max-width: 52rem;
+  font-size: clamp(2.1rem, 4.2vw, 3.5rem);
+  font-weight: 500;
+  line-height: 1.06;
+  letter-spacing: -0.025em;
+  color: var(--warm-white);
+}
+
+.landing-intro {
+  max-width: 34rem;
+  margin-top: 1.1rem;
+  font-size: 1rem;
+  color: rgba(255, 253, 248, 0.78);
+}
+
+@media (max-width: 47.99rem) {
+  .landing {
+    min-height: 100vh;
+    min-height: 100svh;
+  }
+
+  .landing-inner {
+    padding-top: 4rem;
+    padding-bottom: 2.5rem;
+  }
+
+  .landing::before {
+    background-image:
+      linear-gradient(
+        90deg,
+        rgba(23, 33, 43, 0.95) 0%,
+        rgba(23, 33, 43, 0.9) 46%,
+        rgba(43, 53, 80, 0.62) 78%,
+        rgba(90, 46, 58, 0.32) 100%
+      ),
+      linear-gradient(0deg, rgba(23, 33, 43, 0.86) 0%, rgba(23, 33, 43, 0.8) 52%, rgba(23, 33, 43, 0.62) 64%, rgba(23, 33, 43, 0.4) 72%, rgba(23, 33, 43, 0) 82%);
+  }
 }
