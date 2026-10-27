@@ -1,6 +1,7 @@
 import Reveal from '@/components/Reveal';
 import PageHeader from '@/components/PageHeader';
 import HingaMotionFoundation from '@/components/HingaMotionFoundation';
+import HingaStoryScroll from '@/components/HingaStoryScroll';
 import './hinga.css';
 
 export default function HingaPage() {
@@ -22,6 +23,8 @@ export default function HingaPage() {
           Visit hingaai.tech
         </a>
       </PageHeader>
+
+      <HingaStoryScroll />
 
       <Reveal as="section" className="section" data-vt="hinga-card">
         <p>Full story coming after market research.</p>
