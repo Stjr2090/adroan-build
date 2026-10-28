@@ -224,20 +224,23 @@ export default function SiteHeader() {
 
         <nav ref={navStripRef} className="nav-strip" aria-label="Main navigation">
           {/* Hidden sizers: the label widths used by the pill morph. They
-              sit outside both modes so they stay measurable either way. */}
-          {!reducedMotion &&
-            SECTIONS.map((section) => (
-              <span
-                key={`sizer-${section.id}`}
-                className="label-sizer"
-                aria-hidden="true"
-                ref={(node) => {
-                  sizerRefs.current[section.id] = node;
-                }}
-              >
-                {section.label}
-              </span>
-            ))}
+              sit outside both modes so they stay measurable either way.
+              Always rendered (even under reduced motion) so the SSR markup
+              and every client first render stay structurally identical — a
+              motion-dependent structure caused hydration #418/#423 for
+              reduced-motion clients. */}
+          {SECTIONS.map((section) => (
+            <span
+              key={`sizer-${section.id}`}
+              className="label-sizer"
+              aria-hidden="true"
+              ref={(node) => {
+                sizerRefs.current[section.id] = node;
+              }}
+            >
+              {section.label}
+            </span>
+          ))}
 
           <div className="strip-names">
             {SECTIONS.map((section, index) => (
@@ -303,17 +306,15 @@ export default function SiteHeader() {
                 >
                   <span className="dot" aria-hidden="true" />
                   <span className="dot-label" aria-hidden="true">
-                    {reducedMotion
-                      ? section.label
-                      : section.label.split('').map((character, index) => (
-                          <span
-                            key={index}
-                            className="ch"
-                            style={{ '--i': index }}
-                          >
-                            {character}
-                          </span>
-                        ))}
+                    {section.label.split('').map((character, index) => (
+                      <span
+                        key={index}
+                        className="ch"
+                        style={{ '--i': index }}
+                      >
+                        {character}
+                      </span>
+                    ))}
                   </span>
                 </Link>
               );
