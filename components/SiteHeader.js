@@ -15,6 +15,11 @@ const SECTIONS = [
 
 const LIGHT_SCENES = ['about', 'team', 'contact'];
 
+// Each scene's pill palette is fixed by its own theme (About/Team are light,
+// Projects dark). Marking that on the dot itself keeps the pill colours
+// stable when html[data-theme] is mid-cross-fade at a scene boundary.
+const sceneTheme = (id) => (LIGHT_SCENES.includes(id) ? 'light' : 'dark');
+
 // Normalise a pathname to a scene id: '/contact' -> 'contact', '/' -> 'landing'.
 const sceneFromPath = (path) =>
   path === '/' ? 'landing' : path.replace(/^\//, '');
@@ -29,7 +34,13 @@ export default function SiteHeader() {
   // separate pages get their scene from the pathname on first mount.
   const [scene, setScene] = useState('landing');
   const [scrolled, setScrolled] = useState(false);
-  const [wide, setWide] = useState(false);
+  // Read synchronously (not via effect) so the very first client commit
+  // already knows the strip mode; the data-strip attribute is written
+  // pre-paint and must not depend on a later effect for that.
+  const [wide, setWide] = useState(() =>
+    typeof window !== 'undefined' &&
+    window.matchMedia('(min-width: 48rem)').matches
+  );
 
   const [dotActive, setDotActive] = useState(null);
 
@@ -41,12 +52,29 @@ export default function SiteHeader() {
   // timeline so the scene palette never jumps.
   const [exitingId, setExitingId] = useState(null);
   const [pillWidths, setPillWidths] = useState({});
+  // The strip's visible background colour at the moment a morph starts;
+  // the colour set-off crosses from this pinned value so a mid-scroll
+  // theme flip can't re-point the running keyframes.
+  const [morphFromBg, setMorphFromBg] = useState(null);
   const exitTimer = useRef(null);
   const prevActive = useRef(null);
   const itemRefs = useRef({});
   const sizerRefs = useRef({});
+  const navStripRef = useRef(null);
 
   const dotsMode = isHome ? !(scene === 'landing' && wide) : true;
+
+  // Scene attributes commit pre-paint (useLayoutEffect, declared before the
+  // measurement effect) so a morph's first painted frame already carries the
+  // new data-theme / data-strip and the theme attributes can never lead or
+  // lag the pill timeline.
+  useLayoutEffect(() => {
+    const root = document.documentElement;
+    root.setAttribute('data-scene', scene);
+    root.setAttribute('data-theme', sceneTheme(scene));
+    root.setAttribute('data-scrolled', scrolled ? '1' : '0');
+    root.setAttribute('data-strip', isHome && scene === 'landing' && wide ? 'names' : 'dots');
+  }, [scene, scrolled, isHome, wide, pathname]);
 
   // When the active scene changes, the pill that is leaving retracts to an
   // idle dot for one beat while the incoming dot runs the full morph.
@@ -60,6 +88,17 @@ export default function SiteHeader() {
       setExitingId(prev);
       clearTimeout(exitTimer.current);
       exitTimer.current = setTimeout(() => setExitingId(null), 220);
+    }
+    // Pin the morph's colour-settle start to the strip's visible colour.
+    // data-theme has already flipped this commit, so read the computed
+    // value now (its background transition is at t=0, i.e. the colour that
+    // is actually on screen) instead of letting the keyframes resolve the
+    // theme vars live mid-animation.
+    if (dotActive && dotActive !== prev && navStripRef.current) {
+      const stripBg = getComputedStyle(navStripRef.current).backgroundColor;
+      if (stripBg && stripBg !== 'rgba(0, 0, 0, 0)') {
+        setMorphFromBg(stripBg);
+      }
     }
     prevActive.current = dotActive;
     return () => clearTimeout(exitTimer.current);
@@ -160,14 +199,6 @@ export default function SiteHeader() {
     return () => observer.disconnect();
   }, [isHome, pathname]);
 
-  useEffect(() => {
-    const root = document.documentElement;
-    root.setAttribute('data-scene', scene);
-    root.setAttribute('data-theme', LIGHT_SCENES.includes(scene) ? 'light' : 'dark');
-    root.setAttribute('data-scrolled', scrolled ? '1' : '0');
-    root.setAttribute('data-strip', isHome && scene === 'landing' && wide ? 'names' : 'dots');
-  }, [scene, scrolled, isHome, wide, pathname]);
-
   const scrollToSection = (event, id) => {
     event.preventDefault();
     const target = document.getElementById(id);
@@ -191,7 +222,7 @@ export default function SiteHeader() {
           Adroan
         </Link>
 
-        <nav className="nav-strip" aria-label="Main navigation">
+        <nav ref={navStripRef} className="nav-strip" aria-label="Main navigation">
           {/* Hidden sizers: the label widths used by the pill morph. They
               sit outside both modes so they stay measurable either way. */}
           {!reducedMotion &&
@@ -248,12 +279,18 @@ export default function SiteHeader() {
                     itemRefs.current[section.id] = node;
                   }}
                   className={classes}
+                  data-scene-theme={sceneTheme(section.id)}
                   style={
                     widths
                       ? {
                           '--w-idle': widths.idle,
                           '--w-early': widths.early,
                           '--w-final': widths.final,
+                          // Colour-settle start, pinned at morph start (see
+                          // the exit/morph layout effect above).
+                          ...(morphFromBg
+                            ? { '--m-from-bg': morphFromBg }
+                            : {}),
                         }
                       : undefined
                   }

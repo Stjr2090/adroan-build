@@ -83,25 +83,34 @@ html[data-scrolled='1'] .nav-strip {
 
 /* Dots mode */
 
-/* Per-mode palette for the pill, so the staged morph can cross-fade to the
-   scene colours underneath its width animation without a jump. The resting
-   states below keep their own rules and transitions for scene changes. */
+/* Rest-mode (scene) palette for the strip capsule, plus the morph keyframes'
+   fallback start colours (--strip-bg / --strip-fg). */
 html[data-theme='dark'] .strip-dots {
   --strip-bg: var(--warm-white);
   --strip-fg: var(--ink);
-  --pill-bg: var(--coral-deep);
-  --pill-fg: var(--white);
-  --dot-idle: var(--ink);
-  --dot-active: var(--warm-white);
 }
 
 html[data-theme='light'] .strip-dots {
   --strip-bg: var(--coral);
   --strip-fg: var(--ink);
+}
+
+/* Each pill's palette is pinned to its own scene's theme (About/Team light,
+   Projects dark) on the dot itself, so active and leaving pills keep their
+   exact colours even while html[data-theme] is mid-cross-fade at a scene
+   boundary. */
+.strip-dot[data-scene-theme='dark'] {
+  --pill-bg: var(--coral-deep);
+  --pill-fg: var(--white);
+  --dot-active: var(--warm-white);
+  --dot-idle: var(--ink);
+}
+
+.strip-dot[data-scene-theme='light'] {
   --pill-bg: var(--ink);
   --pill-fg: var(--warm-white);
-  --dot-idle: var(--ink);
   --dot-active: var(--coral);
+  --dot-idle: var(--ink);
 }
 
 /* Hidden label sizers for the pill morph widths. They live inside the nav
@@ -186,11 +195,26 @@ html[data-theme='light'] .strip-dots {
 
 .strip-dot.is-exiting {
   width: var(--w-idle, auto);
-  animation: pill-out 220ms var(--ease) both;
+  animation: pill-out 220ms var(--ease) both,
+    pill-color-out 220ms var(--ease) both;
 }
 
 .strip-dot.is-exiting .dot-label {
   animation: label-out 180ms var(--ease) both;
+}
+
+/* The leaving pill keeps what it was showing for the whole retract: the
+   characters stay visible under the clip-path wipe (the morph-in fill no
+   longer applies once the dot is inactive) and the pill background and dot
+   colour fade out on the same 220 ms beat, so label and shell retract
+   instead of snapping away. */
+.strip-dot.is-exiting .ch {
+  opacity: 1;
+  transform: none;
+}
+
+.strip-dot.is-exiting .dot {
+  animation: dot-color-out 220ms var(--ease) both;
 }
 
 @keyframes pill-in {
@@ -251,7 +275,10 @@ html[data-theme='light'] .strip-dots {
 @keyframes pill-color-in {
   0%,
   45% {
-    background-color: var(--strip-bg);
+    /* --m-from-bg is the strip's visible background pinned at morph start
+       by SiteHeader; --strip-bg is the fallback for the first morph before
+       any pin exists. */
+    background-color: var(--m-from-bg, var(--strip-bg));
     color: var(--strip-fg);
     animation-timing-function: var(--ease);
   }
@@ -271,6 +298,28 @@ html[data-theme='light'] .strip-dots {
   100% {
     background-color: var(--dot-active);
     border-color: var(--dot-active);
+  }
+}
+
+@keyframes pill-color-out {
+  from {
+    background-color: var(--pill-bg);
+    color: var(--pill-fg);
+  }
+  to {
+    background-color: transparent;
+    color: var(--strip-fg);
+  }
+}
+
+@keyframes dot-color-out {
+  from {
+    background-color: var(--dot-active);
+    border-color: var(--dot-active);
+  }
+  to {
+    background-color: transparent;
+    border-color: var(--dot-idle);
   }
 }
 
@@ -329,20 +378,20 @@ html[data-scrolled='1'] .strip-item {
   color: rgba(23, 33, 43, 0.5);
 }
 
-/* Dark scenes (defaults): cream strip, ink names, coral active pill. */
+/* Dark scenes (defaults): cream strip, ink names, dot's own pill palette. */
 
 html[data-theme='dark'] .nav-strip {
   background-color: var(--warm-white);
 }
 
 html[data-theme='dark'] .strip-dot.is-active {
-  background-color: var(--coral-deep);
-  color: var(--white);
+  background-color: var(--pill-bg);
+  color: var(--pill-fg);
 }
 
 html[data-theme='dark'] .strip-dot.is-active .dot {
-  border-color: var(--warm-white);
-  background-color: var(--warm-white);
+  border-color: var(--dot-active);
+  background-color: var(--dot-active);
 }
 
 /* Light scenes: coral strip, ink logo/CTA, ink active pill
@@ -380,13 +429,13 @@ html[data-theme='light'] .strip-dot .dot {
 }
 
 html[data-theme='light'] .strip-dot.is-active {
-  background-color: var(--ink);
-  color: var(--warm-white);
+  background-color: var(--pill-bg);
+  color: var(--pill-fg);
 }
 
 html[data-theme='light'] .strip-dot.is-active .dot {
-  border-color: var(--coral);
-  background-color: var(--coral);
+  border-color: var(--dot-active);
+  background-color: var(--dot-active);
 }
 
 /* Reduced motion: every strip state lands in its final state — no morph,
