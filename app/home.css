@@ -115,8 +115,13 @@
   color: var(--warm-white);
 }
 
+/* inline-block, not block: the <br/> between the two spans stays the only
+   line break. A block span would strand the <br/> in an anonymous line
+   box, adding an empty line and doubling the line gap. inline-block keeps
+   each span inside its own line box, so line height and baseline match
+   the pre-Phase-2 heading exactly. */
 .hero-line {
-  display: block;
+  display: inline-block;
 }
 
 /* Hero reveal start states. The inline js-hero class is added synchronously

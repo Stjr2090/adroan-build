@@ -12,10 +12,14 @@ import gsap from 'gsap';
 // The hidden start state lives in home.css under html.js-hero, a class an
 // inline script in page.js adds synchronously during HTML parsing — before
 // first paint — so there is no flash of the SSR-painted final state.
-// No-JS users (no class) and reduced-motion users (media override) always
-// see the final state. GSAP animates from the same 24px/16px from-states,
-// and onComplete removes js-hero so the settled hero is plain markup/CSS:
-// back/forward navigation shows the final state without replaying.
+// No-JS users (no class) always see the final state; reduced-motion users
+// see it instantly too — the CSS media override covers paint time and the
+// effect clears the class at hydration. GSAP animates from the same
+// 24px/16px from-states, and onComplete removes js-hero so the settled
+// hero is plain markup/CSS: back/forward navigation shows the final state
+// without replaying. A live reduce→no-preference flip never leaves a stuck
+// hidden hero, and a live no-preference→reduce flip ends the reveal
+// instantly without replay.
 let heroPlayed = false;
 
 export default function HeroReveal() {
@@ -25,7 +29,12 @@ export default function HeroReveal() {
     }
 
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      // Nothing to replay: under reduced motion the final state stands.
+      // Nothing animates. Mark the reveal consumed and clear the
+      // hidden-state class before returning: if the preference later
+      // flips live from reduce to no-preference, no hidden state is left
+      // behind (and nothing replays), because the class is gone.
+      heroPlayed = true;
+      document.documentElement.classList.remove('js-hero');
       return undefined;
     }
 
@@ -81,9 +90,20 @@ export default function HeroReveal() {
       document.documentElement.classList.remove('js-hero');
     });
 
+    // If the preference flips to reduce mid-reveal, stop moving: jump
+    // straight to the final state (inline GSAP styles beat the CSS media
+    // override, so without this the tail of the animation would keep
+    // running for a user who just asked for none).
+    const reduceQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const onReduceChange = (e) => {
+      if (e.matches) timeline.progress(1);
+    };
+    reduceQuery.addEventListener('change', onReduceChange);
+
     heroPlayed = true;
 
     return () => {
+      reduceQuery.removeEventListener('change', onReduceChange);
       timeline.kill();
       // Guard the reset with a live-node check: on client-side navigation
       // the old page's nodes are already gone when this runs, and
