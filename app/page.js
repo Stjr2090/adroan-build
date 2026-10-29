@@ -10,6 +10,13 @@ export default function HomePage() {
       <HeroReveal />
       <HomeStory />
 
+      <script
+        dangerouslySetInnerHTML={{
+          __html:
+            "(function(){document.documentElement.classList.add('js-hero');})();",
+        }}
+      />
+
       <section id="landing" className="scene scene-landing">
         <div className="hero-media" aria-hidden="true">
           <img

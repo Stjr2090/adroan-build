@@ -119,6 +119,27 @@
   display: block;
 }
 
+/* Hero reveal start states. The inline js-hero class is added synchronously
+   during parse (pre-paint), so there is never a flash of the final state;
+   no-JS (no class) and reduced-motion users see the final state. */
+html.js-hero .hero-line {
+  opacity: 0;
+  transform: translateY(24px);
+}
+
+html.js-hero .hero-copy .button {
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.js-hero .hero-line,
+  html.js-hero .hero-copy .button {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 .hero-sub {
   margin-top: 0.75rem;
   max-width: 24rem;

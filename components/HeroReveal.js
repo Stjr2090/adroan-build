@@ -9,9 +9,13 @@ import gsap from 'gsap';
 // Plays once per document: the module-level flag stops the reveal from
 // replaying on client-side back/forward navigation within the same
 // document (a full reload plays it once again, which is intended).
-// No hidden state exists in CSS — the from-state is applied by JS via
-// gsap.set before paint, so no-JS and reduced-motion users always see
-// the final state.
+// The hidden start state lives in home.css under html.js-hero, a class an
+// inline script in page.js adds synchronously during HTML parsing — before
+// first paint — so there is no flash of the SSR-painted final state.
+// No-JS users (no class) and reduced-motion users (media override) always
+// see the final state. GSAP animates from the same 24px/16px from-states,
+// and onComplete removes js-hero so the settled hero is plain markup/CSS:
+// back/forward navigation shows the final state without replaying.
 let heroPlayed = false;
 
 export default function HeroReveal() {
@@ -70,6 +74,13 @@ export default function HeroReveal() {
       0.38
     );
 
+    // When the reveal finishes, drop the hidden-state class so the final
+    // state lives in plain CSS/markup for the rest of the document's life
+    // (back/forward navigation then shows the settled hero without replay).
+    timeline.eventCallback('onComplete', () => {
+      document.documentElement.classList.remove('js-hero');
+    });
+
     heroPlayed = true;
 
     return () => {
@@ -83,6 +94,9 @@ export default function HeroReveal() {
       if (targets.length) {
         gsap.set(targets, { clearProps: 'all' });
       }
+      // Cover a mid-animation unmount (e.g. navigating away during the
+      // 0.78s reveal): never leave the hidden-state class behind.
+      document.documentElement.classList.remove('js-hero');
     };
   }, []);
 
