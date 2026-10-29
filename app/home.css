@@ -115,6 +115,10 @@
   color: var(--warm-white);
 }
 
+.hero-line {
+  display: block;
+}
+
 .hero-sub {
   margin-top: 0.75rem;
   max-width: 24rem;
