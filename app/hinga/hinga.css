@@ -58,3 +58,215 @@
   margin-top: 1.5rem;
   font-weight: 600;
 }
+
+/* ------------------------------------------------------------------
+   Phase 3 — HINGA pinned scroll story
+   ------------------------------------------------------------------ */
+
+/* Static base (no JS / reduced motion): a normal section — the three
+   beats stack and read top to bottom; the location pin and the chart
+   are parked beside them. Nothing pins, nothing moves. */
+
+.hinga-story {
+  margin-top: 3rem;
+}
+
+.hinga-story-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  gap: 2rem 3rem;
+  align-items: center;
+  padding: clamp(1.75rem, 4vw, 3rem);
+  border: 1px solid rgba(255, 253, 248, 0.16);
+  border-radius: 16px;
+  background-color: rgba(255, 253, 248, 0.045);
+}
+
+.hinga-beat {
+  margin-top: 2.75rem;
+}
+
+.hinga-beat:first-child {
+  margin-top: 0;
+}
+
+.hinga-beat-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--coral);
+}
+
+.hinga-beat-text {
+  margin-top: 0.6rem;
+  max-width: 34rem;
+  color: rgba(255, 253, 248, 0.86);
+}
+
+/* Parked side cards: the location pin and the chart (the chart waits
+   for real metrics; both are static at every phase). */
+
+.hinga-story-side {
+  display: grid;
+  gap: 1.25rem;
+  align-content: center;
+}
+
+.hinga-pin,
+.hinga-chart {
+  padding: 1.1rem 1.25rem;
+  border: 1px solid rgba(255, 253, 248, 0.14);
+  border-radius: 12px;
+  background-color: rgba(255, 253, 248, 0.05);
+}
+
+.hinga-pin-map {
+  position: relative;
+  aspect-ratio: 16 / 7;
+  border-radius: 8px;
+  background-color: rgba(43, 53, 80, 0.55);
+}
+
+.hinga-pin-dot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0.7rem;
+  height: 0.7rem;
+  margin: -0.35rem 0 0 -0.35rem;
+  border-radius: 50%;
+  background-color: var(--coral);
+  box-shadow: 0 0 0 5px rgba(232, 106, 69, 0.22);
+}
+
+.hinga-pin-name {
+  margin-top: 0.9rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  color: rgba(255, 253, 248, 0.5);
+}
+
+.hinga-pin-label {
+  margin-top: 0.15rem;
+  font-weight: 600;
+  color: var(--warm-white);
+}
+
+.hinga-pin-address {
+  margin-top: 0.15rem;
+  font-size: 0.875rem;
+  color: rgba(255, 253, 248, 0.72);
+}
+
+.hinga-pin-coords {
+  margin-top: 0.4rem;
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+  color: rgba(255, 253, 248, 0.5);
+}
+
+.hinga-chart-bars {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.hinga-chart-bar {
+  height: 0.65rem;
+  border-radius: 999px;
+  background-color: rgba(255, 253, 248, 0.14);
+}
+
+.hinga-chart-bar--mid {
+  width: 68%;
+}
+
+.hinga-chart-bar--short {
+  width: 42%;
+}
+
+.hinga-chart figcaption {
+  margin-top: 0.8rem;
+  font-size: 0.8rem;
+  color: rgba(255, 253, 248, 0.4);
+}
+
+/* Motion state — lives under html.js-hinga-story, a class the inline
+   script in page.js adds during HTML parsing (pre-paint) and the
+   HingaStory effect removes whenever it does not pin. The card becomes
+   a full-viewport panel and the three beats share one fixed-height box
+   (absolute, centred), so the pinned card never reflows while they
+   scrub past. Transform and opacity only. The first beat is the
+   visible start state; the other two sit at the scrub from-state. */
+
+html.js-hinga-story .hinga-story-card {
+  min-height: 100vh;
+  min-height: 100svh;
+}
+
+html.js-hinga-story .hinga-beats {
+  position: relative;
+  min-height: 14rem;
+}
+
+html.js-hinga-story .hinga-beat {
+  position: absolute;
+  inset: 0;
+  margin-top: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  opacity: 0;
+  transform: translateY(16px);
+  will-change: opacity, transform;
+}
+
+html.js-hinga-story .hinga-beat--first {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+html.js-hinga-story .hinga-beat-text {
+  max-width: 36rem;
+}
+
+@media (max-width: 47.99rem) {
+  html.js-hinga-story .hinga-story-card {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    align-content: center;
+    padding: 1.5rem;
+  }
+
+  html.js-hinga-story .hinga-beats {
+    min-height: 18rem;
+  }
+}
+
+/* Reduced motion: the CSS media override covers paint time (before
+   JS can run), asserting the static, fully readable card; GSAP inline
+   states are cleared by the effect, the !important guards keep the
+   settled card static if a flip races the teardown. */
+
+@media (prefers-reduced-motion: reduce) {
+  html.js-hinga-story .hinga-story-card {
+    min-height: 0;
+  }
+
+  html.js-hinga-story .hinga-beats {
+    min-height: 0;
+  }
+
+  html.js-hinga-story .hinga-beat {
+    position: static;
+    inset: auto;
+    display: block;
+    opacity: 1 !important;
+    transform: none !important;
+    will-change: auto;
+  }
+
+  html.js-hinga-story .hinga-beat + .hinga-beat {
+    margin-top: 2.75rem;
+  }
+}
