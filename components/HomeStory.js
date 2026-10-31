@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useLayoutEffect } from 'react';
 import gsap from 'gsap';
@@ -10,7 +10,7 @@ export default function HomeStory() {
     const media = gsap.matchMedia();
     media.add('(prefers-reduced-motion: no-preference)', () => {
       document.documentElement.classList.add('home-story-motion');
-      const wash = document.querySelector('.home-wash-light');
+      const layers = gsap.utils.toArray('.wash-layer');
       const scenes = gsap.utils.toArray('.scene');
       gsap.fromTo('.hero-photo', { autoAlpha: 1 }, {
         autoAlpha: 0, ease: 'none',
@@ -20,8 +20,10 @@ export default function HomeStory() {
         scrollTrigger: { trigger: '#landing', start: 'top top', end: 'bottom 20%', scrub: true },
       });
       scenes.slice(1).forEach((scene, index) => {
-        gsap.fromTo(wash, { opacity: index % 2 ? 1 : 0 }, {
-          opacity: index % 2 ? 0 : 1, immediateRender: false, ease: 'none',
+        // Each scene's own approved gradient rides in as one fixed layer,
+        // covering the layer below it; the layers never merge.
+        gsap.fromTo(layers[index + 1], { opacity: 0 }, {
+          opacity: 1, immediateRender: false, ease: 'none',
           scrollTrigger: { trigger: scene, start: 'top bottom', end: 'top 60%', scrub: true },
         });
         const targets = scene.querySelectorAll('.scene-title, .about-copy p, .pillar-card, .hinga-copy > p, .hinga-cta, .hinga-image, .team-card');

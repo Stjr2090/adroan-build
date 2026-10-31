@@ -8,7 +8,12 @@ export default function HomePage() {
     <>
       <HeroReveal />
       <HomeStory />
-      <div className="home-wash" aria-hidden="true"><div className="home-wash-light" /></div>
+      <div className="home-wash" aria-hidden="true">
+        <div className="wash-layer wash-landing" />
+        <div className="wash-layer wash-about" />
+        <div className="wash-layer wash-projects" />
+        <div className="wash-layer wash-team" />
+      </div>
 
       <script
         dangerouslySetInnerHTML={{
