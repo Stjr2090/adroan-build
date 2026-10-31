@@ -1,4 +1,4 @@
-/* Adroan homepage â€” wireframe v3 (source of truth), brief #1319 palette.
+/* Adroan homepage — wireframe v3 (source of truth), brief #1319 palette.
    Four full-height scenes: landing (dark, Ember Dusk), About (light,
    Sunrise Coral), Projects (dark), Team (light). Scene boundaries wash
    through the adjacent palette with a short top gradient; radial mesh
@@ -39,7 +39,7 @@
   letter-spacing: -0.01em;
 }
 
-/* Placeholder content bars â€” grey = placeholder content (wireframe v3). */
+/* Placeholder content bars — grey = placeholder content (wireframe v3). */
 .skeleton {
   height: 0.8rem;
   margin-top: 1.1rem;
@@ -55,7 +55,7 @@
   width: 78%;
 }
 
-/* 1 â€” Landing: dark, Ember Dusk, 100svh, no white band. */
+/* 1 — Landing: dark, Ember Dusk, 100svh, no white band. */
 
 .scene-landing {
   background-color: var(--ink);
@@ -86,7 +86,7 @@
 }
 
 /* Hero shade (fix): text-side only, fading out by ~70% width; soft fade
-   into the dark at the bottom so the photo dissolves â€” no hard rectangle
+   into the dark at the bottom so the photo dissolves — no hard rectangle
    edge, no full-photo dark overlay. Keeps AA for the headline and sub. */
 .hero-shade {
   position: absolute;
@@ -155,7 +155,7 @@ html.js-hero .hero-copy .button {
   margin-top: 1.75rem;
 }
 
-/* 2 â€” About: light, Sunrise Coral; the page washes dark -> light. */
+/* 2 — About: light, Sunrise Coral; the page washes dark -> light. */
 
 .scene-about {
   background:
@@ -194,7 +194,7 @@ html.js-hero .hero-copy .button {
   color: rgba(23, 33, 43, 0.45);
 }
 
-/* 3 â€” Projects: dark, Ember Dusk; washes back to dark. */
+/* 3 — Projects: dark, Ember Dusk; washes back to dark. */
 
 .scene-projects {
   background:
@@ -268,7 +268,7 @@ html.js-hero .hero-copy .button {
   font-size: 0.875rem;
 }
 
-/* 4 â€” Team: light, Sunrise Coral; washes back to light. */
+/* 4 — Team: light, Sunrise Coral; washes back to light. */
 
 .scene-team {
   background:
@@ -352,4 +352,44 @@ html.js-hero .hero-copy .button {
     transform: none !important;
     transition: none !important;
   }
+}
+/* One fixed palette wash connects all four scenes. Static backgrounds remain
+   the no-JS and reduced-motion fallback. */
+.home-wash { display: none; }
+.home-story-motion .home-wash {
+  display: block;
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(42rem 30rem at 92% 78%, rgba(232,106,69,.14), transparent 70%), radial-gradient(50rem 34rem at 78% 42%, rgba(90,46,58,.42), transparent 70%), var(--ink);
+}
+.home-wash-light {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background: radial-gradient(48rem 32rem at 86% 82%, rgba(246,162,126,.4), transparent 70%), radial-gradient(52rem 34rem at 88% 30%, rgba(255,217,194,.55), transparent 70%), var(--warm-white);
+}
+.home-story-motion .scene { background: transparent; }
+.home-story-motion .scene-landing::before { display: none; }
+.about-copy p, .hinga-copy > p + p { margin-top: 1.1rem; }
+.hero-sub { max-width: 36rem; color: var(--warm-white); }
+.hinga-card { background: var(--ink); }
+.pillar-card span, .team-photo, .team-role { color: #4d555c; }
+.hinga-image { color: var(--warm-white); }
+.hinga-cta:hover, .hinga-cta:focus-visible { background: var(--coral-deep); }
+.site-footer { position: relative; }
+@media (prefers-reduced-motion: reduce) {
+  .home-wash { display: none !important; }
+  .scene-about, .scene-team { background: var(--warm-white); }
+  .scene-projects { background: var(--ink); }
+}
+@media (pointer: coarse) { html { scroll-behavior: auto; } }
+
+/* Keep the longer approved hero copy readable over the photograph. */
+.hero-shade {
+  background: linear-gradient(180deg, transparent 55%, var(--ink) 98%),
+    linear-gradient(90deg, rgba(23,33,43,.85) 0%, rgba(23,33,43,.75) 55%, transparent 90%);
+}
+@media (max-width: 47.99rem) {
+  .hero-shade { background: linear-gradient(180deg, rgba(23,33,43,.65) 0%, rgba(23,33,43,.75) 70%, var(--ink) 98%); }
 }

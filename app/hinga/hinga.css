@@ -1,14 +1,7 @@
-/* HINGA page — wireframe v3 separate-pages card: a dark (Ember Dusk) page
-   with an image block and text lines. All motion/theming follows the
-   shared site tokens; the site header picks up its dark scene colours
-   through html[data-scene='hinga'] in globals.css. */
-
+/* HINGA palette is route-local; Adroan tokens remain unchanged. */
 .hinga-page {
-  background:
-    radial-gradient(48rem 32rem at 85% 10%, rgba(90, 46, 58, 0.45), transparent 70%),
-    radial-gradient(40rem 28rem at 8% 82%, rgba(43, 53, 80, 0.5), transparent 70%),
-    var(--ink);
-  color: var(--warm-white);
+  background: #F3F5F0;
+  color: #233122;
 }
 
 .hinga-page .page-header,
@@ -18,17 +11,17 @@
 }
 
 .hinga-page .intro {
-  color: rgba(255, 253, 248, 0.82);
+  color: #233122;
 }
 
 .hinga-page a {
-  color: var(--coral);
+  color: #2D5A27;
 }
 
 .hinga-fact {
   margin-top: 0.75rem;
   font-size: 0.9rem;
-  color: var(--coral);
+  color: #2D5A27;
 }
 
 .hinga-figure {
@@ -38,10 +31,10 @@
   aspect-ratio: 16 / 9;
   min-height: 16rem;
   margin-top: 3rem;
-  border: 1px solid rgba(255, 253, 248, 0.15);
+  border: 1px solid #E1E5DE;
   border-radius: 12px;
-  background-color: rgba(255, 253, 248, 0.06);
-  color: rgba(255, 253, 248, 0.35);
+  background-color: #FBFCFA;
+  color: #233122;
   font-size: 0.875rem;
 }
 
@@ -50,7 +43,7 @@
 }
 
 .hinga-more p {
-  color: rgba(255, 253, 248, 0.75);
+  color: #233122;
 }
 
 .hinga-link {
@@ -64,8 +57,7 @@
    ------------------------------------------------------------------ */
 
 /* Static base (no JS / reduced motion): a normal section — the three
-   beats stack and read top to bottom; the location pin and the chart
-   are parked beside them. Nothing pins, nothing moves. */
+   beats stack and read top to bottom; the chart is parked beside them. Nothing pins, nothing moves. */
 
 .hinga-story {
   margin-top: 3rem;
@@ -77,9 +69,9 @@
   gap: 2rem 3rem;
   align-items: center;
   padding: clamp(1.75rem, 4vw, 3rem);
-  border: 1px solid rgba(255, 253, 248, 0.16);
+  border: 1px solid #E1E5DE;
   border-radius: 16px;
-  background-color: rgba(255, 253, 248, 0.045);
+  background-color: #FBFCFA;
 }
 
 .hinga-beat {
@@ -95,17 +87,16 @@
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--coral);
+  color: #2D5A27;
 }
 
 .hinga-beat-text {
   margin-top: 0.6rem;
   max-width: 34rem;
-  color: rgba(255, 253, 248, 0.86);
+  color: #233122;
 }
 
-/* Parked side cards: the location pin and the chart (the chart waits
-   for real metrics; both are static at every phase). */
+/* The labelled chart placeholder waits for real metrics. */
 
 .hinga-story-side {
   display: grid;
@@ -113,57 +104,11 @@
   align-content: center;
 }
 
-.hinga-pin,
 .hinga-chart {
   padding: 1.1rem 1.25rem;
-  border: 1px solid rgba(255, 253, 248, 0.14);
+  border: 1px solid #E1E5DE;
   border-radius: 12px;
-  background-color: rgba(255, 253, 248, 0.05);
-}
-
-.hinga-pin-map {
-  position: relative;
-  aspect-ratio: 16 / 7;
-  border-radius: 8px;
-  background-color: rgba(43, 53, 80, 0.55);
-}
-
-.hinga-pin-dot {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 0.7rem;
-  height: 0.7rem;
-  margin: -0.35rem 0 0 -0.35rem;
-  border-radius: 50%;
-  background-color: var(--coral);
-  box-shadow: 0 0 0 5px rgba(232, 106, 69, 0.22);
-}
-
-.hinga-pin-name {
-  margin-top: 0.9rem;
-  font-size: 0.8rem;
-  letter-spacing: 0.06em;
-  color: rgba(255, 253, 248, 0.5);
-}
-
-.hinga-pin-label {
-  margin-top: 0.15rem;
-  font-weight: 600;
-  color: var(--warm-white);
-}
-
-.hinga-pin-address {
-  margin-top: 0.15rem;
-  font-size: 0.875rem;
-  color: rgba(255, 253, 248, 0.72);
-}
-
-.hinga-pin-coords {
-  margin-top: 0.4rem;
-  font-size: 0.8rem;
-  font-variant-numeric: tabular-nums;
-  color: rgba(255, 253, 248, 0.5);
+  background-color: #FFFFFF;
 }
 
 .hinga-chart-bars {
@@ -174,7 +119,7 @@
 .hinga-chart-bar {
   height: 0.65rem;
   border-radius: 999px;
-  background-color: rgba(255, 253, 248, 0.14);
+  background-color: #E1E5DE;
 }
 
 .hinga-chart-bar--mid {
@@ -188,7 +133,7 @@
 .hinga-chart figcaption {
   margin-top: 0.8rem;
   font-size: 0.8rem;
-  color: rgba(255, 253, 248, 0.4);
+  color: #233122;
 }
 
 /* Motion state — lives under html.js-hinga-story, a class the inline
@@ -269,4 +214,16 @@ html.js-hinga-story .hinga-beat-text {
   html.js-hinga-story .hinga-beat + .hinga-beat {
     margin-top: 2.75rem;
   }
+}
+
+.hinga-page .page-header::before { background: #164E47; }
+html[data-scene='hinga'], html[data-scene='hinga'] body { background: #F3F5F0; }
+html[data-scene='hinga'] .brand { color: #164E47; }
+html[data-scene='hinga'] .nav-strip { background: #FFFFFF; border: 1px solid #E1E5DE; }
+html[data-scene='hinga'] .strip-dot { color: #005052; }
+html[data-scene='hinga'] .contact-cta { background: #2D5A27; color: #FFFFFF; }
+html[data-scene='hinga'] .site-footer { background: #F3F5F0; }
+html[data-scene='hinga'] .footer-note { color: #233122; }
+@media (max-width: 47.99rem) {
+  .hinga-story-card { grid-template-columns: minmax(0, 1fr); }
 }

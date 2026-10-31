@@ -4,25 +4,7 @@ import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-// HINGA pinned scroll story (Phase 3): the HINGA card pins while its
-// three beats — people, problem, idea — scrub past it, driven by GSAP
-// ScrollTrigger. Transform and opacity only; the pin spacer is the only
-// layout change, and the beats share one fixed-height box, so the pinned
-// card never reflows while the three scrub past.
-//
-// The three beat copy blocks are the HINGA passages from approved brief
-// #2290, verbatim. The location pin (MIIC Hub) and the chart card stay
-// parked: static content inside the pinned card, no motion of their own
-// (the chart waits for real metrics).
-//
-// No-JS: the card is a normal section, all three beats stacked and fully
-// readable. Prefers-reduced-motion: the same static card — the CSS media
-// override in hinga.css covers paint time, and the effect below removes
-// the hidden-state class whenever it does not pin. The hidden start
-// states live in hinga.css under html.js-hinga-story, a class the inline
-// script in page.js adds synchronously during HTML parsing, before first
-// paint, so there is no flash of the final state (same gate pattern as
-// the Phase 2 hero reveal).
+// Three approved passages; scoped cleanup restores the readable static layout.
 
 const BEATS = [
   {
@@ -63,15 +45,15 @@ export default function HingaStory() {
       if (context) {
         const current = context;
         context = null;
-        // On client-side navigation the old page's nodes are already
-        // gone when this runs; reverting against dead nodes only adds a
-        // "target not found" warning to the console.
-        if (section.isConnected) current.revert();
+        // Always revert this context, including on route unmount, so its
+        // ScrollTrigger cannot survive detached markup.
+        current.revert();
       }
       document.documentElement.classList.remove('js-hinga-story');
     };
 
     const setup = () => {
+      document.documentElement.classList.add('js-hinga-story');
       const [first, second, third] = beats;
       context = gsap.context(() => {
         // From-states must match the CSS gate exactly, so first paint
@@ -158,18 +140,6 @@ export default function HingaStory() {
         </div>
 
         <div className="hinga-story-side">
-          <div className="hinga-pin">
-            <div className="hinga-pin-map" aria-hidden="true">
-              <span className="hinga-pin-dot" />
-            </div>
-            <p className="hinga-pin-name">MIIC Hub</p>
-            <p className="hinga-pin-label">
-              Makerere Innovation and Incubation Center
-            </p>
-            <p className="hinga-pin-address">Pool road, COCIS Block B, Kampala</p>
-            <p className="hinga-pin-coords">0.3323261, 32.5704417</p>
-          </div>
-
           <figure
             className="hinga-chart"
             role="img"

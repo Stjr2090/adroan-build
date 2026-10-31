@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import Reveal from '@/components/Reveal';
 import HomeStory from '@/components/HomeStory';
 import HeroReveal from '@/components/HeroReveal';
 import './home.css';
@@ -9,6 +8,7 @@ export default function HomePage() {
     <>
       <HeroReveal />
       <HomeStory />
+      <div className="home-wash" aria-hidden="true"><div className="home-wash-light" /></div>
 
       <script
         dangerouslySetInnerHTML={{
@@ -33,10 +33,10 @@ export default function HomePage() {
             <h1 className="hero-title">
               <span className="hero-line">Technology built with communities,</span>
               <br />
-              <span className="hero-line">for communities</span>
+              <span className="hero-line">for communities.</span>
             </h1>
             <p className="hero-sub">
-              Adroan is a technology company in Kampala, Uganda.
+              We believe the people closest to a challenge should help shape the technology built around it. HINGA explores that idea in agriculture, starting with farmers and the wider value chain.
             </p>
             <Link href="/contact" className="button">
               Contact us
@@ -47,13 +47,11 @@ export default function HomePage() {
 
       <section id="about" className="scene scene-about">
         <div className="scene-inner about-inner">
-          <Reveal as="div" className="about-copy">
+          <div className="about-copy">
             <h2 className="scene-title">About Adroan</h2>
-            <div className="skeleton" aria-hidden="true" />
-            <div className="skeleton" aria-hidden="true" />
-            <div className="skeleton" aria-hidden="true" />
-            <div className="skeleton s-narrow" aria-hidden="true" />
-          </Reveal>
+            <p>Adroan is guided by a simple promise: technology built with communities, for communities.</p>
+            <p>We want to understand people's needs and context, and use that understanding to shape useful technology.</p>
+          </div>
           <div className="pillar-grid">
             <div className="pillar-card">
               <span>value / pillar</span>
@@ -71,9 +69,9 @@ export default function HomePage() {
           <div className="hinga-card">
             <div className="hinga-copy">
               <p className="hinga-name">HINGA</p>
-              <div className="skeleton" aria-hidden="true" />
-              <div className="skeleton s-short" aria-hidden="true" />
-              <div className="skeleton s-narrow" aria-hidden="true" />
+              <p>Connecting agriculture, from farmers to markets.</p>
+              <p>HINGA's first version gives farmers a way to ask questions about farming. Its next direction is agricultural data: helping farmers connect with one another and closing the loop between the farm end of the value chain and the exporters and buyers at the other end.</p>
+              <p>The aim is to bring people across that chain closer together, starting with the farmers whose work underpins it.</p>
               <Link href="/hinga" className="hinga-cta">
                 Explore HINGA <span aria-hidden="true">→</span>
               </Link>
@@ -87,8 +85,8 @@ export default function HomePage() {
 
       <section id="team" className="scene scene-team">
         <div className="scene-inner team-inner">
-          <h2 className="scene-title">Team</h2>
-          <Reveal as="div" className="team-grid">
+          <h2 className="scene-title">Meet the people behind Adroan.</h2>
+          <div className="team-grid">
             <div className="team-card">
               <div className="team-photo" aria-hidden="true">
                 portrait
@@ -110,7 +108,7 @@ export default function HomePage() {
               <p className="team-name">Name</p>
               <p className="team-role">Role</p>
             </div>
-          </Reveal>
+          </div>
         </div>
       </section>
     </>
