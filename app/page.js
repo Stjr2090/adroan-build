@@ -1,12 +1,21 @@
 import Link from 'next/link';
 import Reveal from '@/components/Reveal';
 import HomeStory from '@/components/HomeStory';
+import HeroReveal from '@/components/HeroReveal';
 import './home.css';
 
 export default function HomePage() {
   return (
     <>
+      <HeroReveal />
       <HomeStory />
+
+      <script
+        dangerouslySetInnerHTML={{
+          __html:
+            "(function(){document.documentElement.classList.add('js-hero');})();",
+        }}
+      />
 
       <section id="landing" className="scene scene-landing">
         <div className="hero-media" aria-hidden="true">
@@ -22,9 +31,9 @@ export default function HomePage() {
         <div className="scene-inner">
           <div className="hero-copy">
             <h1 className="hero-title">
-              Technology built with communities,
+              <span className="hero-line">Technology built with communities,</span>
               <br />
-              for communities
+              <span className="hero-line">for communities</span>
             </h1>
             <p className="hero-sub">
               Adroan is a technology company in Kampala, Uganda.
