@@ -81,8 +81,251 @@ html[data-scrolled='1'] .nav-strip {
   gap: 0.15rem;
 }
 
+/* Dots mode */
+
+/* Rest-mode (scene) palette for the strip capsule, plus the morph keyframes'
+   fallback start colours (--strip-bg / --strip-fg). */
+html[data-theme='dark'] .strip-dots {
+  --strip-bg: var(--warm-white);
+  --strip-fg: var(--ink);
+}
+
+html[data-theme='light'] .strip-dots {
+  --strip-bg: var(--coral);
+  --strip-fg: var(--ink);
+}
+
+/* Each pill's palette is pinned to its own scene's theme (About/Team light,
+   Projects dark) on the dot itself, so active and leaving pills keep their
+   exact colours even while html[data-theme] is mid-cross-fade at a scene
+   boundary. */
+.strip-dot[data-scene-theme='dark'] {
+  --pill-bg: var(--coral-deep);
+  --pill-fg: var(--white);
+  --dot-active: var(--warm-white);
+  --dot-idle: var(--ink);
+}
+
+.strip-dot[data-scene-theme='light'] {
+  --pill-bg: var(--ink);
+  --pill-fg: var(--warm-white);
+  --dot-active: var(--coral);
+  --dot-idle: var(--ink);
+}
+
+/* Hidden label sizers for the pill morph widths. They live inside the nav
+   but outside both strip modes, so they stay measurable in either mode. */
+.label-sizer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  visibility: hidden;
+  white-space: nowrap;
+  font-size: 0.85rem;
+  font-weight: 600;
+  pointer-events: none;
+}
+
+.strip-dot {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.3rem 0.35rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ink);
+  text-decoration: none;
+  overflow: hidden;
+  transition: background-color var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease);
+}
+
+.strip-dot .dot {
+  flex: none;
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+  transition: background-color var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease);
+}
+
+/* The label parks just past the dot (its offset matches the flex gap, so
+   the active pill is geometrically identical to the resting pill) and the
+   pill's animated width reveals it. */
+.dot-label {
+  position: absolute;
+  left: calc(0.35rem + 0.6rem + 0.45rem);
+  top: 50%;
+  transform: translateY(-50%);
+  white-space: nowrap;
+}
+
+.dot-label .ch {
+  display: inline-block;
+  opacity: 0;
+  transform: translateX(0.45em);
+}
+
+/* Staged pill morph: dot -> stretch into pill -> label wipe (two widths +
+   character stagger) -> palette settle, on one ~400 ms timeline. */
+
+.strip-dot.is-active {
+  width: var(--w-final, auto);
+}
+
+.strip-dot.morph-in {
+  animation: pill-in 400ms both, pill-color-in 400ms both;
+}
+
+.strip-dot.morph-in .dot-label {
+  animation: label-in 400ms both;
+}
+
+.strip-dot.morph-in .dot {
+  animation: dot-color-in 400ms both;
+}
+
+.strip-dot.morph-in .ch {
+  animation: ch-in 160ms var(--ease) both;
+  animation-delay: calc(150ms + var(--i) * 13ms);
+}
+
+.strip-dot.is-exiting {
+  width: var(--w-idle, auto);
+  animation: pill-out 220ms var(--ease) both,
+    pill-color-out 220ms var(--ease) both;
+}
+
+.strip-dot.is-exiting .dot-label {
+  animation: label-out 180ms var(--ease) both;
+}
+
+/* The leaving pill keeps what it was showing for the whole retract: the
+   characters stay visible under the clip-path wipe (the morph-in fill no
+   longer applies once the dot is inactive) and the pill background and dot
+   colour fade out on the same 220 ms beat, so label and shell retract
+   instead of snapping away. */
+.strip-dot.is-exiting .ch {
+  opacity: 1;
+  transform: none;
+}
+
+.strip-dot.is-exiting .dot {
+  animation: dot-color-out 220ms var(--ease) both;
+}
+
+@keyframes pill-in {
+  0% {
+    width: var(--w-idle, auto);
+    animation-timing-function: var(--ease);
+  }
+  37.5% {
+    width: var(--w-early, var(--w-idle, auto));
+  }
+  85%,
+  100% {
+    width: var(--w-final, auto);
+  }
+}
+
+@keyframes pill-out {
+  from {
+    width: var(--w-final, auto);
+  }
+  to {
+    width: var(--w-idle, auto);
+  }
+}
+
+@keyframes label-in {
+  0%,
+  36% {
+    clip-path: inset(0 100% 0 0);
+    animation-timing-function: var(--ease);
+  }
+  84%,
+  100% {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes label-out {
+  from {
+    clip-path: inset(0 0 0 0);
+  }
+  to {
+    clip-path: inset(0 100% 0 0);
+  }
+}
+
+@keyframes ch-in {
+  from {
+    opacity: 0;
+    transform: translateX(0.45em);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pill-color-in {
+  0%,
+  45% {
+    /* --m-from-bg is the strip's visible background pinned at morph start
+       by SiteHeader; --strip-bg is the fallback for the first morph before
+       any pin exists. */
+    background-color: var(--m-from-bg, var(--strip-bg));
+    color: var(--strip-fg);
+    animation-timing-function: var(--ease);
+  }
+  100% {
+    background-color: var(--pill-bg);
+    color: var(--pill-fg);
+  }
+}
+
+@keyframes dot-color-in {
+  0%,
+  45% {
+    background-color: transparent;
+    border-color: var(--dot-idle);
+    animation-timing-function: var(--ease);
+  }
+  100% {
+    background-color: var(--dot-active);
+    border-color: var(--dot-active);
+  }
+}
+
+@keyframes pill-color-out {
+  from {
+    background-color: var(--pill-bg);
+    color: var(--pill-fg);
+  }
+  to {
+    background-color: transparent;
+    color: var(--strip-fg);
+  }
+}
+
+@keyframes dot-color-out {
+  from {
+    background-color: var(--dot-active);
+    border-color: var(--dot-active);
+  }
+  to {
+    background-color: transparent;
+    border-color: var(--dot-idle);
+  }
+}
+
 /* The unused mode is removed from layout entirely (display none), so the
-   capsule never reserves the other mode's width on narrow screens. */
+   capsule never reserves the other mode's width on narrow screens. A short
+   fade keeps the mode swap from popping. */
 .strip-dots {
   display: none;
 }
@@ -93,6 +336,17 @@ html[data-strip='dots'] .strip-names {
 
 html[data-strip='dots'] .strip-dots {
   display: flex;
+  animation: strip-in 160ms var(--ease) both;
+}
+
+html[data-strip='names'] .strip-names {
+  animation: strip-in 160ms var(--ease) both;
+}
+
+@keyframes strip-in {
+  from {
+    opacity: 0;
+  }
 }
 
 /* Names mode */
@@ -124,50 +378,20 @@ html[data-scrolled='1'] .strip-item {
   color: rgba(23, 33, 43, 0.5);
 }
 
-/* Dots mode */
-
-.strip-dot {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  padding: 0.3rem 0.35rem;
-  border-radius: 999px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--ink);
-  text-decoration: none;
-  transition: background-color var(--dur-fast) var(--ease),
-    color var(--dur-fast) var(--ease);
-}
-
-.strip-dot .dot {
-  width: 0.6rem;
-  height: 0.6rem;
-  border-radius: 50%;
-  border: 1.5px solid currentColor;
-  transition: background-color var(--dur-fast) var(--ease),
-    border-color var(--dur-fast) var(--ease);
-}
-
-.dot-label {
-  display: inline-block;
-  white-space: nowrap;
-}
-
-/* Dark scenes (defaults): cream strip, ink names, coral active pill. */
+/* Dark scenes (defaults): cream strip, ink names, dot's own pill palette. */
 
 html[data-theme='dark'] .nav-strip {
   background-color: var(--warm-white);
 }
 
 html[data-theme='dark'] .strip-dot.is-active {
-  background-color: var(--coral-deep);
-  color: var(--white);
+  background-color: var(--pill-bg);
+  color: var(--pill-fg);
 }
 
 html[data-theme='dark'] .strip-dot.is-active .dot {
-  border-color: var(--warm-white);
-  background-color: var(--warm-white);
+  border-color: var(--dot-active);
+  background-color: var(--dot-active);
 }
 
 /* Light scenes: coral strip, ink logo/CTA, ink active pill
@@ -205,13 +429,42 @@ html[data-theme='light'] .strip-dot .dot {
 }
 
 html[data-theme='light'] .strip-dot.is-active {
-  background-color: var(--ink);
-  color: var(--warm-white);
+  background-color: var(--pill-bg);
+  color: var(--pill-fg);
 }
 
 html[data-theme='light'] .strip-dot.is-active .dot {
-  border-color: var(--coral);
-  background-color: var(--coral);
+  border-color: var(--dot-active);
+  background-color: var(--dot-active);
+}
+
+/* Reduced motion: every strip state lands in its final state — no morph,
+   no character stagger, no mode fade. The label sits in flow again so the
+   resting active pill has its intrinsic width. */
+@media (prefers-reduced-motion: reduce) {
+  html[data-strip='dots'] .strip-dots,
+  html[data-strip='names'] .strip-names,
+  .strip-dot.morph-in,
+  .strip-dot.is-exiting,
+  .strip-dot.morph-in .dot-label,
+  .strip-dot.morph-in .dot,
+  .strip-dot.morph-in .ch,
+  .strip-dot.is-exiting .dot-label {
+    animation: none !important;
+  }
+
+  .strip-dots .dot-label,
+  .strip-dots .dot-label .ch {
+    position: static;
+    clip-path: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  /* Inactive dots stay bare dots; only the active pill carries its label. */
+  .strip-dot:not(.is-active) .dot-label {
+    display: none;
+  }
 }
 
 @media (max-width: 47.99rem) {
