@@ -1,0 +1,325 @@
+/* Adroan homepage — wireframe v3 (source of truth), brief #1319 palette.
+   Four full-height scenes: landing (dark, Ember Dusk), About (light,
+   Sunrise Coral), Projects (dark), Team (light). Scene boundaries wash
+   through the adjacent palette with a short top gradient; radial mesh
+   tints per scene palette; grain is applied site-wide in globals.css. */
+
+.scene {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  min-height: 100vh;
+  min-height: 100svh;
+  overflow: clip;
+}
+
+/* The landing hero sits on the optical centre; the other scenes start
+   under the header, per wireframe v3. */
+.scene-landing {
+  align-items: center;
+}
+
+.scene-inner {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 7rem 1.5rem 4rem;
+}
+
+.scene-landing .scene-inner {
+  padding-top: 8rem;
+}
+
+.scene-title {
+  font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+  line-height: 1.3;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+/* Placeholder content bars — grey = placeholder content (wireframe v3). */
+.skeleton {
+  height: 0.8rem;
+  margin-top: 1.1rem;
+  border-radius: 999px;
+  background-color: rgba(23, 33, 43, 0.1);
+}
+
+.s-narrow {
+  width: 45%;
+}
+
+.s-short {
+  width: 78%;
+}
+
+/* 1 — Landing: dark, Ember Dusk, 100svh, no white band. */
+
+.scene-landing {
+  background-color: var(--ink);
+}
+
+.scene-landing::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(46rem 30rem at 82% 18%, rgba(90, 46, 58, 0.5), transparent 70%),
+    radial-gradient(38rem 26rem at 12% 88%, rgba(43, 53, 80, 0.55), transparent 70%);
+}
+
+.hero-media {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.hero-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Skyline sits low and right in the photo; keep it clear of the text side. */
+  object-position: 100% 100%;
+}
+
+/* Hero shade (fix): text-side only, fading out by ~70% width; soft fade
+   into the dark at the bottom so the photo dissolves — no hard rectangle
+   edge, no full-photo dark overlay. Keeps AA for the headline and sub. */
+.hero-shade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(23, 33, 43, 0) 55%,
+      rgba(23, 33, 43, 0.5) 85%,
+      var(--ink) 98%
+    ),
+    linear-gradient(
+      90deg,
+      rgba(23, 33, 43, 0.66) 0%,
+      rgba(23, 33, 43, 0.42) 38%,
+      rgba(23, 33, 43, 0) 70%
+    );
+}
+
+.hero-title {
+  max-width: 40rem;
+  font-size: clamp(1.75rem, 1.35rem + 1vw, 2.125rem);
+  line-height: 1.2;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: var(--warm-white);
+}
+
+.hero-sub {
+  margin-top: 0.75rem;
+  max-width: 24rem;
+  color: rgba(255, 253, 248, 0.82);
+}
+
+.scene-landing .button {
+  margin-top: 1.75rem;
+}
+
+/* 2 — About: light, Sunrise Coral; the page washes dark -> light. */
+
+.scene-about {
+  background:
+    radial-gradient(52rem 34rem at 88% 30%, rgba(255, 217, 194, 0.55), transparent 70%),
+    linear-gradient(180deg, var(--ink) 0%, var(--warm-white) 22%);
+  color: var(--ink);
+}
+
+.about-inner {
+  max-width: 44rem;
+}
+
+.pillar-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+  margin-top: 2.5rem;
+  max-width: 42rem;
+}
+
+@media (max-width: 47.99rem) {
+  .pillar-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pillar-card {
+  min-height: 13rem;
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius);
+  background-color: rgba(23, 33, 43, 0.07);
+}
+
+.pillar-card span {
+  font-size: 0.875rem;
+  color: rgba(23, 33, 43, 0.45);
+}
+
+/* 3 — Projects: dark, Ember Dusk; washes back to dark. */
+
+.scene-projects {
+  background:
+    radial-gradient(42rem 30rem at 92% 78%, rgba(232, 106, 69, 0.14), transparent 70%),
+    radial-gradient(50rem 34rem at 78% 42%, rgba(90, 46, 58, 0.42), transparent 70%),
+    linear-gradient(180deg, var(--warm-white) 0%, var(--ink) 22%);
+  color: var(--warm-white);
+}
+
+.projects-inner {
+  max-width: 52rem;
+}
+
+.hinga-card {
+  display: grid;
+  grid-template-columns: 1.05fr 0.55fr;
+  gap: 2rem;
+  align-items: start;
+  margin-top: 2.5rem;
+  max-width: 48rem;
+  padding: 2.25rem;
+  border: 1px solid rgba(255, 253, 248, 0.16);
+  border-radius: 16px;
+}
+
+@media (max-width: 47.99rem) {
+  .hinga-card {
+    grid-template-columns: 1fr;
+    padding: 1.5rem;
+  }
+}
+
+.hinga-name {
+  font-size: 1.4rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.hinga-copy .skeleton {
+  background-color: rgba(255, 253, 248, 0.13);
+}
+
+.hinga-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 1.9rem;
+  padding: 0.65rem 1.3rem;
+  border-radius: 10px;
+  background-color: var(--coral-deep);
+  color: var(--white);
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color var(--dur-fast) var(--ease);
+}
+
+.hinga-cta:hover,
+.hinga-cta:focus-visible {
+  background-color: var(--coral);
+}
+
+.hinga-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 16 / 10;
+  border-radius: 12px;
+  background-color: rgba(43, 53, 80, 0.5);
+  color: rgba(255, 253, 248, 0.4);
+  font-size: 0.875rem;
+}
+
+/* 4 — Team: light, Sunrise Coral; washes back to light. */
+
+.scene-team {
+  background:
+    radial-gradient(48rem 32rem at 86% 82%, rgba(246, 162, 126, 0.4), transparent 70%),
+    linear-gradient(180deg, var(--ink) 0%, var(--warm-white) 22%);
+  color: var(--ink);
+}
+
+.team-inner {
+  max-width: 50rem;
+}
+
+.team-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  margin-top: 2.5rem;
+}
+
+@media (min-width: 48rem) {
+  .team-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.team-card {
+  padding: 1.25rem;
+  border-radius: var(--radius);
+  background-color: var(--white);
+  box-shadow: var(--shadow);
+}
+
+/* Cards slide in one after another (stagger 60ms), triggered by the grid's
+   Reveal observer. Hidden state only exists once JS adds .reveal to the
+   grid, so no-JS and reduced-motion users always see the final state. */
+.team-grid.reveal .team-card {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity var(--dur-base) var(--ease),
+    transform var(--dur-base) var(--ease);
+}
+
+.team-grid.reveal .team-card:nth-child(2) {
+  transition-delay: var(--stagger);
+}
+
+.team-grid.reveal .team-card:nth-child(3) {
+  transition-delay: calc(var(--stagger) * 2);
+}
+
+.team-grid.is-visible .team-card {
+  opacity: 1;
+  transform: none;
+}
+
+.team-photo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1 / 1;
+  margin-bottom: 1rem;
+  border-radius: 10px;
+  background-color: rgba(23, 33, 43, 0.07);
+  color: rgba(23, 33, 43, 0.4);
+  font-size: 0.8rem;
+}
+
+.team-name {
+  font-weight: 600;
+}
+
+.team-role {
+  margin-top: 0.15rem;
+  font-size: 0.9rem;
+  color: rgba(23, 33, 43, 0.55);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .team-grid .team-card {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}

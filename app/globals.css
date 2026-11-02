@@ -1,17 +1,39 @@
 :root {
+  /* Colour and type — brief #1319. */
   --warm-white: #FFFDF8;
   --ink: #17212B;
   --coral: #E86A45;
+  /* Darker coral behind small white text (#E86A45 only reaches ~3.2:1;
+     one-step darkening of the brief's #C9532F to clear 4.5:1 WCAG AA —
+     measured 4.55:1 with white). */
+  --coral-deep: #C5522E;
   --white: #FFFFFF;
+  /* Sunrise Coral (light) */
+  --sun-2: #FFD9C2;
+  --sun-3: #F6A27E;
+  /* Ember Dusk (dark) */
+  --ember-2: #2B3550;
+  --ember-3: #5A2E3A;
   --radius: 12px;
   --shadow: 0 2px 10px rgba(23, 33, 43, 0.06);
-  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  /* One easing (brief #1319). */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast: 160ms;
+  --dur-base: 280ms;
+  --dur-slow: 560ms;
+  --stagger: 60ms;
 }
 
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+/* Dark base so the landing top (and any overscroll) never shows a white
+   band — the wireframe's "100svh, no white band" fix. */
+html {
+  background-color: var(--ink);
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -21,12 +43,25 @@
 }
 
 body {
-  font-family: var(--font-inter), 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  background-color: var(--warm-white);
-  color: var(--ink);
+  font-family: var(--font-inter), 'Inter', ui-sans-serif, system-ui,
+    -apple-system, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--ink);
+  color: var(--warm-white);
   font-size: 1rem;
   line-height: 1.6;
   min-height: 100vh;
+}
+
+/* Subtle film grain over everything, per the approved "radial mesh plus
+   grain" look. Pure CSS, cheap enough for mid-range Android. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  opacity: 0.045;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
 }
 
 a {
@@ -49,14 +84,16 @@ h2 {
   font-weight: 600;
 }
 
-.container {
-  max-width: 72rem;
-  margin: 0 auto;
-  padding: 1.5rem;
-}
-
 .page {
   flex: 1;
+}
+
+.page-wrap {
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100svh;
+  margin: 0 auto;
+  padding: 6.5rem 1.5rem 4rem;
 }
 
 .page-header {
@@ -96,20 +133,20 @@ h2 {
   margin-top: 1.75rem;
   padding: 0.65rem 1.4rem;
   border: none;
-  border-radius: var(--radius);
-  background-color: var(--coral);
+  border-radius: 10px;
+  background-color: var(--coral-deep);
   color: var(--white);
   font-family: inherit;
   font-size: 0.95rem;
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;
-  transition: background-color 240ms var(--ease), transform 240ms var(--ease);
+  transition: background-color var(--dur-base) var(--ease),
+    transform var(--dur-fast) var(--ease);
 }
 
 .button:hover {
-  opacity: 0.88;
-  transform: translateY(-1px);
+  background-color: var(--coral);
 }
 
 .button:focus-visible {
@@ -117,170 +154,87 @@ h2 {
   outline-offset: 2px;
 }
 
-/* Nav */
-
-.site-header {
-  border-bottom: 1px solid rgba(23, 33, 43, 0.08);
-  background-color: var(--warm-white);
-}
-
-.nav {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.25rem 1.25rem;
-  padding-top: 0.9rem;
-  padding-bottom: 0.9rem;
-}
-
-.nav-link {
-  display: inline-block;
-  padding: 0.25rem 0;
-  border: none;
-  background: none;
-  font-family: inherit;
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--ink);
-  text-decoration: none;
-  cursor: pointer;
-  border-bottom: 2px solid transparent;
-  transition: color 180ms var(--ease), border-color 180ms var(--ease);
-}
-
-.nav-link:hover,
-.nav-link:focus-visible {
-  color: var(--coral);
-  border-bottom-color: var(--coral);
-  text-decoration: none;
-  outline: none;
-}
-
-.nav-link[aria-current="page"] {
-  color: var(--coral);
-  border-bottom-color: var(--coral);
-}
-
-/* Team cards */
-
-.team-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1.25rem;
-}
-
-@media (min-width: 48rem) {
-  .team-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-.team-card {
-  position: relative;
-  overflow: hidden;
-  padding: 1.5rem;
-  border-radius: var(--radius);
-  background-color: var(--white);
-  box-shadow: var(--shadow);
-}
-
-/* About: split layout, set 3 */
-
-.about-split {
-  display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  gap: 2rem;
-  align-items: center;
-}
-
-.about-text h1 {
-  margin-bottom: 1rem;
-}
-
-.about-text p {
-  margin-bottom: 0.75rem;
-}
-
-.about-media {
-  min-height: 20rem;
-  border-radius: 1rem;
-  background-color: var(--white);
-  border: 1px solid rgba(23, 33, 43, 0.08);
-  box-shadow: var(--shadow);
-}
-
-.about-row {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
-  gap: 1.25rem;
-}
-
-.about-block {
-  padding: 1.25rem;
-  border-radius: var(--radius);
-  background-color: var(--white);
-  box-shadow: var(--shadow);
-}
-
-.about-block h2 {
-  font-size: 1.125rem;
-  margin-bottom: 0.5rem;
-}
-
-/* Team: photo placeholders, set 3 */
-
-.team-photo {
-  position: relative;
-  aspect-ratio: 1 / 1;
-  width: 100%;
-  margin-bottom: 0.75rem;
-  border-radius: var(--radius);
-  background-color: rgba(23, 33, 43, 0.06);
-  transition: transform 240ms var(--ease);
-}
-
-.team-card:hover .team-photo {
-  transform: scale(1.04);
-}
-
-.team-card-accent::before {
-  content: "";
-  position: absolute;
-  top: 0.75rem;
-  right: 0.75rem;
-  width: 3rem;
-  height: 3rem;
-  border-radius: 1rem;
-  background-color: var(--coral);
-}
-
-.team-name {
-  font-weight: 600;
-}
-
-.team-role {
-  margin-top: 0.25rem;
-}
-
-/* Footer */
-
+/* Footer — dark band under all scenes (wireframe v3). The top gradient
+   blends in from the light Team scene; the /hinga page overrides it. */
 .site-footer {
-  padding-top: 1rem;
-  padding-bottom: 1.5rem;
+  background: linear-gradient(
+    180deg,
+    var(--warm-white) 0%,
+    var(--ink) 14%,
+    var(--ink) 100%
+  );
+  padding: 4.5rem 1.5rem 2rem;
+}
+
+html[data-scene='hinga'] .site-footer {
+  background-color: var(--ink);
+  padding-top: 2.5rem;
 }
 
 .footer-note {
   font-size: 0.875rem;
-  color: var(--ink);
-  opacity: 0.6;
+  color: rgba(255, 253, 248, 0.72);
 }
 
-/* Scroll reveals (JS-enhanced; visible when JS is absent) */
+/* Contact page — light, full-bleed, narrow column. */
+
+.page-contact {
+  background-color: var(--warm-white);
+  color: var(--ink);
+}
+
+.page-contact .page-header,
+.page-contact .contact-section {
+  max-width: 28rem;
+}
+
+.contact-form {
+  display: grid;
+  gap: 0.9rem;
+  max-width: 26rem;
+  margin-top: 2rem;
+}
+
+.contact-form input,
+.contact-form textarea {
+  font: inherit;
+  color: var(--ink);
+  padding: 0.8rem 1rem;
+  border: 1px solid rgba(23, 33, 43, 0.22);
+  border-radius: 10px;
+  background-color: var(--white);
+}
+
+.contact-form textarea {
+  min-height: 8rem;
+  resize: vertical;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  outline: 2px solid var(--coral);
+  outline-offset: 1px;
+}
+
+.contact-send {
+  margin-top: 0.25rem;
+  justify-self: start;
+}
+
+.contact-note {
+  margin-top: 1.25rem;
+  font-size: 0.9rem;
+  opacity: 0.65;
+}
+
+/* Scroll reveals (JS-enhanced; visible when JS is absent or motion is
+   reduced). Rises 16px over the base duration per brief #1319. */
 
 .reveal {
   opacity: 0;
-  transform: translateY(12px);
-  transition: opacity 240ms var(--ease), transform 240ms var(--ease);
+  transform: translateY(16px);
+  transition: opacity var(--dur-base) var(--ease),
+    transform var(--dur-base) var(--ease);
   will-change: opacity, transform;
 }
 
@@ -289,73 +243,7 @@ h2 {
   transform: none;
 }
 
-@media (max-width: 47.99rem) {
-  .about-split {
-    grid-template-columns: 1fr;
-  }
-}
-
 .placeholder {
   font-style: italic;
   opacity: 0.55;
-}
-
-/* Home explore: click-downs (accordion) */
-
-.home-explore {
-  margin-top: 2rem;
-}
-
-.home-explore h2 {
-  margin-bottom: 0.75rem;
-}
-
-.home-explore details {
-  padding: 0.75rem 1rem;
-  margin-bottom: 0.75rem;
-  border-radius: var(--radius);
-  background-color: var(--white);
-  box-shadow: var(--shadow);
-}
-
-.home-explore summary {
-  cursor: pointer;
-  font-weight: 600;
-  color: var(--ink);
-}
-
-.home-explore summary::-webkit-details-marker {
-  display: none;
-}
-
-.home-explore summary::after {
-  content: "+";
-  float: right;
-  color: var(--coral);
-  font-weight: 600;
-}
-
-.home-explore details[open] summary::after {
-  content: "−";
-}
-
-.home-explore details[open] summary {
-  color: var(--coral);
-}
-
-.home-explore details p {
-  margin-top: 0.5rem;
-}
-
-.home-explore details p + p {
-  margin-top: 0.25rem;
-}
-
-.home-fact-hinga summary::after {
-  color: #2D5A27;
-}
-
-.home-fact-hinga[open] summary::after,
-.home-fact-hinga[open] summary {
-  color: #2D5A27;
 }

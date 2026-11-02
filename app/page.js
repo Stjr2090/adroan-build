@@ -1,57 +1,109 @@
 import Link from 'next/link';
-import PageHeader from '@/components/PageHeader';
 import Reveal from '@/components/Reveal';
+import HomeStory from '@/components/HomeStory';
+import './home.css';
 
 export default function HomePage() {
   return (
-    <div className="page-wrap">
-      <PageHeader title="Technology built with communities, for communities">
-        <p className="intro">Adroan is a technology company in Kampala, Uganda.</p>
-        <Link href="/contact" className="button">
-          Contact us
-        </Link>
-      </PageHeader>
+    <>
+      <HomeStory />
 
-      <Reveal as="section" className="home-explore" aria-label="Explore Adroan">
-        <h2>Explore</h2>
+      <section id="landing" className="scene scene-landing">
+        <div className="hero-media" aria-hidden="true">
+          <img
+            className="hero-photo"
+            src="/images/landing-kampala.jpg"
+            alt=""
+            width="1600"
+            height="1067"
+          />
+          <div className="hero-shade" />
+        </div>
+        <div className="scene-inner">
+          <div className="hero-copy">
+            <h1 className="hero-title">
+              Technology built with communities,
+              <br />
+              for communities
+            </h1>
+            <p className="hero-sub">
+              Adroan is a technology company in Kampala, Uganda.
+            </p>
+            <Link href="/contact" className="button">
+              Contact us
+            </Link>
+          </div>
+        </div>
+      </section>
 
-        <details>
-          <summary>About</summary>
-          <p>
-            We build technology with communities, for communities — a small
-            team in Kampala, Uganda.
-          </p>
-          <Link href="/about">Read about Adroan</Link>
-        </details>
+      <section id="about" className="scene scene-about">
+        <div className="scene-inner about-inner">
+          <Reveal as="div" className="about-copy">
+            <h2 className="scene-title">About Adroan</h2>
+            <div className="skeleton" aria-hidden="true" />
+            <div className="skeleton" aria-hidden="true" />
+            <div className="skeleton" aria-hidden="true" />
+            <div className="skeleton s-narrow" aria-hidden="true" />
+          </Reveal>
+          <div className="pillar-grid">
+            <div className="pillar-card">
+              <span>value / pillar</span>
+            </div>
+            <div className="pillar-card">
+              <span>value / pillar</span>
+            </div>
+          </div>
+        </div>
+      </section>
 
-        <details>
-          <summary>Team</summary>
-          <p>
-            Three co-founders lead Adroan: engineering, business
-            development and legal.
-          </p>
-          <Link href="/team">Meet the team</Link>
-        </details>
+      <section id="projects" className="scene scene-projects">
+        <div className="scene-inner projects-inner">
+          <h2 className="scene-title">Projects</h2>
+          <div className="hinga-card">
+            <div className="hinga-copy">
+              <p className="hinga-name">HINGA</p>
+              <div className="skeleton" aria-hidden="true" />
+              <div className="skeleton s-short" aria-hidden="true" />
+              <div className="skeleton s-narrow" aria-hidden="true" />
+              <Link href="/hinga" className="hinga-cta">
+                Explore HINGA <span aria-hidden="true">→</span>
+              </Link>
+            </div>
+            <div className="hinga-image" role="img" aria-label="HINGA image placeholder">
+              HINGA image
+            </div>
+          </div>
+        </div>
+      </section>
 
-        <details>
-          <summary>Contact</summary>
-          <p>Kampala, Uganda. Contact details to be added.</p>
-          <Link href="/contact">Go to Contact</Link>
-        </details>
-
-        <details className="home-fact-hinga">
-          <summary>HINGA — our first project</summary>
-          <p>
-            HINGA is technology built with communities, for communities —
-            Adroan&apos;s first project.
-          </p>
-          <a href="https://hingaai.tech" target="_blank" rel="noopener noreferrer">
-            Visit hingaai.tech
-          </a>
-          {' · '}
-          <Link href="/hinga">Open the HINGA page</Link>
-        </details>
-      </Reveal>
-    </div>
+      <section id="team" className="scene scene-team">
+        <div className="scene-inner team-inner">
+          <h2 className="scene-title">Team</h2>
+          <Reveal as="div" className="team-grid">
+            <div className="team-card">
+              <div className="team-photo" aria-hidden="true">
+                portrait
+              </div>
+              <p className="team-name">Name</p>
+              <p className="team-role">Role</p>
+            </div>
+            <div className="team-card">
+              <div className="team-photo" aria-hidden="true">
+                portrait
+              </div>
+              <p className="team-name">Name</p>
+              <p className="team-role">Role</p>
+            </div>
+            <div className="team-card">
+              <div className="team-photo" aria-hidden="true">
+                portrait
+              </div>
+              <p className="team-name">Name</p>
+              <p className="team-role">Role</p>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+    </>
   );
 }
