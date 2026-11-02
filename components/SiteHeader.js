@@ -1,9 +1,9 @@
 'use client';
 
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
+import { useReducedMotion } from 'motion/react';
 import { lenisRef } from '@/lib/lenis';
 import './site-header.css';
 
@@ -15,7 +15,12 @@ const SECTIONS = [
 
 const LIGHT_SCENES = ['about', 'team', 'contact'];
 
-// Normalize a pathname to a scene id: '/contact' -> 'contact', '/' -> 'landing'.
+// Each scene's pill palette is fixed by its own theme (About/Team are light,
+// Projects dark). Marking that on the dot itself keeps the pill colours
+// stable when html[data-theme] is mid-cross-fade at a scene boundary.
+const sceneTheme = (id) => (LIGHT_SCENES.includes(id) ? 'light' : 'dark');
+
+// Normalise a pathname to a scene id: '/contact' -> 'contact', '/' -> 'landing'.
 const sceneFromPath = (path) =>
   path === '/' ? 'landing' : path.replace(/^\//, '');
 
@@ -29,9 +34,128 @@ export default function SiteHeader() {
   // separate pages get their scene from the pathname on first mount.
   const [scene, setScene] = useState('landing');
   const [scrolled, setScrolled] = useState(false);
-  const [wide, setWide] = useState(false);
+  // Read synchronously (not via effect) so the very first client commit
+  // already knows the strip mode; the data-strip attribute is written
+  // pre-paint and must not depend on a later effect for that.
+  const [wide, setWide] = useState(() =>
+    typeof window !== 'undefined' &&
+    window.matchMedia('(min-width: 48rem)').matches
+  );
 
   const [dotActive, setDotActive] = useState(null);
+
+  // --- Phased pill morph (Phase 4) -----------------------------------
+  // Idle dot -> dot stretches into the pill shell -> label wipes in across
+  // two pill widths with a short character stagger -> scene colour settles.
+  // Widths are measured live and passed to the CSS keyframes as custom
+  // properties; the colour cross-fade happens underneath on the same 400 ms
+  // timeline so the scene palette never jumps.
+  const [exitingId, setExitingId] = useState(null);
+  const [pillWidths, setPillWidths] = useState({});
+  // The strip's visible background colour at the moment a morph starts;
+  // the colour set-off crosses from this pinned value so a mid-scroll
+  // theme flip can't re-point the running keyframes.
+  const [morphFromBg, setMorphFromBg] = useState(null);
+  const exitTimer = useRef(null);
+  const prevActive = useRef(null);
+  const itemRefs = useRef({});
+  const sizerRefs = useRef({});
+  const navStripRef = useRef(null);
+
+  const dotsMode = isHome ? !(scene === 'landing' && wide) : true;
+
+  // Scene attributes commit pre-paint (useLayoutEffect, declared before the
+  // measurement effect) so a morph's first painted frame already carries the
+  // new data-theme / data-strip and the theme attributes can never lead or
+  // lag the pill timeline.
+  useLayoutEffect(() => {
+    const root = document.documentElement;
+    root.setAttribute('data-scene', scene);
+    root.setAttribute('data-theme', sceneTheme(scene));
+    root.setAttribute('data-scrolled', scrolled ? '1' : '0');
+    root.setAttribute('data-strip', isHome && scene === 'landing' && wide ? 'names' : 'dots');
+  }, [scene, scrolled, isHome, wide, pathname]);
+
+  // When the active scene changes, the pill that is leaving retracts to an
+  // idle dot for one beat while the incoming dot runs the full morph.
+  useLayoutEffect(() => {
+    if (reducedMotion) {
+      prevActive.current = dotActive;
+      return undefined;
+    }
+    const prev = prevActive.current;
+    if (prev && prev !== dotActive) {
+      setExitingId(prev);
+      clearTimeout(exitTimer.current);
+      exitTimer.current = setTimeout(() => setExitingId(null), 220);
+    }
+    // Pin the morph's colour-settle start to the strip's visible colour.
+    // data-theme has already flipped this commit, so read the computed
+    // value now (its background transition is at t=0, i.e. the colour that
+    // is actually on screen) instead of letting the keyframes resolve the
+    // theme vars live mid-animation.
+    if (dotActive && dotActive !== prev && navStripRef.current) {
+      const stripBg = getComputedStyle(navStripRef.current).backgroundColor;
+      if (stripBg && stripBg !== 'rgba(0, 0, 0, 0)') {
+        setMorphFromBg(stripBg);
+      }
+    }
+    prevActive.current = dotActive;
+    return () => clearTimeout(exitTimer.current);
+  }, [dotActive, reducedMotion]);
+
+  // Measure the two pill widths for every dot before paint so the keyframes
+  // have the right targets from the first frame of a morph.
+  useLayoutEffect(() => {
+    if (reducedMotion) return undefined;
+    const measure = () => {
+      const next = {};
+      SECTIONS.forEach((section) => {
+        const pill = itemRefs.current[section.id];
+        const sizer = sizerRefs.current[section.id];
+        const dot = pill && pill.querySelector('.dot');
+        // Skip while a dot is hidden (names mode), unstyled, or squeezed by
+        // an in-flight width animation: a bad sample poisons the idle width.
+        if (
+          !pill ||
+          !dot ||
+          !sizer ||
+          sizer.offsetWidth <= 0 ||
+          dot.offsetWidth < 9 ||
+          getComputedStyle(pill).display === 'none'
+        ) {
+          return;
+        }
+        const cs = getComputedStyle(pill);
+        const idle =
+          parseFloat(cs.paddingLeft) +
+          parseFloat(cs.paddingRight) +
+          dot.offsetWidth;
+        const gap = parseFloat(cs.columnGap) || 0;
+        next[section.id] = {
+          idle: `${Math.round(idle)}px`,
+          early: `${Math.round(idle + (gap + sizer.offsetWidth) * 0.55)}px`,
+          final: `${Math.round(idle + gap + sizer.offsetWidth)}px`,
+        };
+      });
+      setPillWidths((prev) => {
+        const same =
+          Object.keys(next).length === SECTIONS.length &&
+          SECTIONS.every(
+            (s) =>
+              prev[s.id] &&
+              prev[s.id].idle === next[s.id].idle &&
+              prev[s.id].early === next[s.id].early &&
+              prev[s.id].final === next[s.id].final
+          );
+        return same ? prev : next;
+      });
+    };
+    measure();
+    window.addEventListener('resize', measure);
+    document.fonts.ready.then(measure).catch(() => {});
+    return () => window.removeEventListener('resize', measure);
+  }, [dotsMode, scene, reducedMotion]);
 
   useEffect(() => {
     const mq = window.matchMedia('(min-width: 48rem)');
@@ -75,14 +199,6 @@ export default function SiteHeader() {
     return () => observer.disconnect();
   }, [isHome, pathname]);
 
-  useEffect(() => {
-    const root = document.documentElement;
-    root.setAttribute('data-scene', scene);
-    root.setAttribute('data-theme', LIGHT_SCENES.includes(scene) ? 'light' : 'dark');
-    root.setAttribute('data-scrolled', scrolled ? '1' : '0');
-    root.setAttribute('data-strip', isHome && scene === 'landing' && wide ? 'names' : 'dots');
-  }, [scene, scrolled, isHome, wide, pathname]);
-
   const scrollToSection = (event, id) => {
     event.preventDefault();
     const target = document.getElementById(id);
@@ -106,7 +222,26 @@ export default function SiteHeader() {
           Adroan
         </Link>
 
-        <nav className="nav-strip" aria-label="Main navigation">
+        <nav ref={navStripRef} className="nav-strip" aria-label="Main navigation">
+          {/* Hidden sizers: the label widths used by the pill morph. They
+              sit outside both modes so they stay measurable either way.
+              Always rendered (even under reduced motion) so the SSR markup
+              and every client first render stay structurally identical — a
+              motion-dependent structure caused hydration #418/#423 for
+              reduced-motion clients. */}
+          {SECTIONS.map((section) => (
+            <span
+              key={`sizer-${section.id}`}
+              className="label-sizer"
+              aria-hidden="true"
+              ref={(node) => {
+                sizerRefs.current[section.id] = node;
+              }}
+            >
+              {section.label}
+            </span>
+          ))}
+
           <div className="strip-names">
             {SECTIONS.map((section, index) => (
               <Fragment key={section.id}>
@@ -129,32 +264,58 @@ export default function SiteHeader() {
           <div className="strip-dots">
             {SECTIONS.map((section) => {
               const active = dotActive === section.id;
+              const exiting =
+                !reducedMotion && exitingId === section.id && !active;
+              const classes = [
+                'strip-dot',
+                active ? 'is-active' : '',
+                active && !reducedMotion ? 'morph-in' : '',
+                exiting ? 'is-exiting' : '',
+              ]
+                .filter(Boolean)
+                .join(' ');
+              const widths = pillWidths[section.id];
               return (
                 <Link
                   key={section.id}
-                  className={`strip-dot${active ? ' is-active' : ''}`}
+                  ref={(node) => {
+                    itemRefs.current[section.id] = node;
+                  }}
+                  className={classes}
+                  data-scene-theme={sceneTheme(section.id)}
+                  style={
+                    widths
+                      ? {
+                          '--w-idle': widths.idle,
+                          '--w-early': widths.early,
+                          '--w-final': widths.final,
+                          // Colour-settle start, pinned at morph start (see
+                          // the exit/morph layout effect above).
+                          ...(morphFromBg
+                            ? { '--m-from-bg': morphFromBg }
+                            : {}),
+                        }
+                      : undefined
+                  }
                   aria-label={section.label}
                   aria-current={active ? 'location' : undefined}
                   href={sectionHref(section.id)}
-                  onClick={(event) => isHome && scrollToSection(event, section.id)}
+                  onClick={(event) =>
+                    isHome && scrollToSection(event, section.id)
+                  }
                 >
                   <span className="dot" aria-hidden="true" />
-                  {active &&
-                    (reducedMotion ? (
-                      <span className="dot-label">{section.label}</span>
-                    ) : (
-                      <AnimatePresence initial={false}>
-                        <motion.span
-                          className="dot-label"
-                          initial={{ opacity: 0, x: -6 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          exit={{ opacity: 0, x: -6 }}
-                          transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-                        >
-                          {section.label}
-                        </motion.span>
-                      </AnimatePresence>
+                  <span className="dot-label" aria-hidden="true">
+                    {section.label.split('').map((character, index) => (
+                      <span
+                        key={index}
+                        className="ch"
+                        style={{ '--i': index }}
+                      >
+                        {character}
+                      </span>
                     ))}
+                  </span>
                 </Link>
               );
             })}
