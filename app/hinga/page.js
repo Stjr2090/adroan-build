@@ -1,5 +1,6 @@
 import Reveal from '@/components/Reveal';
 import PageHeader from '@/components/PageHeader';
+import HingaStory from '@/components/HingaStory';
 import './hinga.css';
 
 export default function HingaPage() {
@@ -15,8 +16,9 @@ export default function HingaPage() {
 
       <Reveal as="section" className="hinga-figure" aria-label="Image placeholder" />
 
+      <HingaStory />
+
       <Reveal as="section" className="hinga-more">
-        <p>Full story coming after market research.</p>
         <a
           className="hinga-link"
           href="https://hingaai.tech"
@@ -26,6 +28,13 @@ export default function HingaPage() {
           Visit hingaai.tech
         </a>
       </Reveal>
+
+      <script
+        dangerouslySetInnerHTML={{
+          __html:
+            "(function(){document.documentElement.classList.add('js-hinga-story');})();",
+        }}
+      />
     </div>
   );
 }

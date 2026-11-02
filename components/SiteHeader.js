@@ -25,11 +25,15 @@ export default function SiteHeader() {
   const reducedMotion = useReducedMotion();
 
   // Scene: which of the four homepage scenes (or separate page) owns the
-  // viewport middle. Initial value matches the SSR attributes in layout.js;
-  // separate pages get their scene from the pathname on first mount.
-  const [scene, setScene] = useState('landing');
+  // viewport middle. Initial value follows the route, matching the parse-time
+  // script in layout.js, so hydration never flips a sub-page's theme.
+  const [scene, setScene] = useState(() => sceneFromPath(pathname));
   const [scrolled, setScrolled] = useState(false);
-  const [wide, setWide] = useState(false);
+  const [wide, setWide] = useState(() =>
+    typeof window === 'undefined'
+      ? true
+      : window.matchMedia('(min-width: 48rem)').matches
+  );
 
   const [dotActive, setDotActive] = useState(null);
 

@@ -18,15 +18,21 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html
-      lang="en"
-      className={inter.variable}
-      data-scene="landing"
-      data-theme="dark"
-      data-strip="names"
-      data-scrolled="0"
-    >
+    <html lang="en" className={inter.variable}>
       <body>
+        {/* Parse-time, pre-paint: align the route's scene/theme/strip before
+            the header can paint, so sub-pages (e.g. /hinga) never flash the
+            Home landing theme. Values match SiteHeader's own logic exactly. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "(function(){var p=location.pathname.replace(/\\/+$/,'').replace(/^\\/+/,'')||'landing';" +
+              "var r=document.documentElement;" +
+              "r.setAttribute('data-scene',p);" +
+              "r.setAttribute('data-theme',['about','team','contact'].indexOf(p)!==-1?'light':'dark');" +
+              "r.setAttribute('data-strip',p==='landing'&&window.matchMedia('(min-width: 48rem)').matches?'names':'dots');})();",
+          }}
+        />
         <SiteHeader />
         <main className="page">{children}</main>
         <footer className="site-footer">
