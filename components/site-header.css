@@ -1,230 +1,52 @@
-/* Site header — wireframe v3: three separate pieces.
-   Logo LEFT outside the strip, Contact us RIGHT outside the strip,
-   the centre strip is the only piece that expands and compresses.
-   Theme follows data-theme on <html> (set by components/SiteHeader):
-   dark scenes -> cream strip, coral active pill, cream logo, coral CTA.
-   light scenes -> coral strip, ink active pill, ink logo, ink CTA.
-   data-strip swaps names mode (landing) for dots mode (from About on).
-   data-scrolled compacts the strip once scrolling starts. */
-
-.site-header {
-  position: fixed;
-  inset: 0 0 auto 0;
-  z-index: 100;
-  pointer-events: none;
-}
-
-.site-header a,
-.site-header .strip-dot {
-  pointer-events: auto;
-}
-
-.site-header-inner {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: center;
-  max-width: 100%;
-  padding: 1rem 1.5rem;
-}
-
-.brand {
-  justify-self: start;
-  font-size: 1.125rem;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-  color: var(--warm-white);
-  text-decoration: none;
-  transition: color var(--dur-base) var(--ease);
-}
-
-.contact-cta {
-  justify-self: end;
-  display: inline-block;
-  padding: 0.5rem 1.15rem;
-  border-radius: 999px;
-  background-color: var(--coral-deep);
-  color: var(--white);
-  font-size: 0.9rem;
-  font-weight: 600;
-  text-decoration: none;
-  white-space: nowrap;
-  transition: background-color var(--dur-base) var(--ease),
-    color var(--dur-base) var(--ease);
-}
-
-.contact-cta:hover,
-.contact-cta:focus-visible {
-  background-color: var(--coral);
-}
-
-/* Centre strip (both modes share the capsule) */
-
-.nav-strip {
-  justify-self: center;
-  display: flex;
-  align-items: center;
-  padding: 0.45rem 1rem;
-  border-radius: 999px;
-  background-color: var(--warm-white);
-  transition: background-color var(--dur-base) var(--ease),
-    padding var(--dur-base) var(--ease);
-}
-
-html[data-scrolled='1'] .nav-strip {
-  padding: 0.3rem 0.85rem;
-}
-
-.strip-names,
-.strip-dots {
-  display: flex;
-  align-items: center;
-  gap: 0.15rem;
-}
-
-/* The unused mode is removed from layout entirely (display none), so the
-   capsule never reserves the other mode's width on narrow screens. */
-.strip-dots {
-  display: none;
-}
-
-html[data-strip='dots'] .strip-names {
-  display: none;
-}
-
-html[data-strip='dots'] .strip-dots {
-  display: flex;
-}
-
-/* Names mode */
-
-.strip-item {
-  display: inline-block;
-  padding: 0.2rem 0.6rem;
-  border-radius: 999px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--ink);
-  text-decoration: none;
-  transition: color var(--dur-fast) var(--ease);
-}
-
-.strip-item:hover,
-.strip-item:focus-visible {
-  color: var(--coral-deep);
-}
-
-html[data-scrolled='1'] .strip-item {
-  font-size: 0.85rem;
-  padding: 0.15rem 0.5rem;
-}
-
-.strip-sep {
-  padding: 0 0.2rem;
-  font-size: 0.85rem;
-  color: rgba(23, 33, 43, 0.5);
-}
-
-/* Dots mode */
-
-.strip-dot {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  padding: 0.3rem 0.35rem;
-  border-radius: 999px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--ink);
-  text-decoration: none;
-  transition: background-color var(--dur-fast) var(--ease),
-    color var(--dur-fast) var(--ease);
-}
-
-.strip-dot .dot {
-  width: 0.6rem;
-  height: 0.6rem;
-  border-radius: 50%;
-  border: 1.5px solid currentColor;
-  transition: background-color var(--dur-fast) var(--ease),
-    border-color var(--dur-fast) var(--ease);
-}
-
-.dot-label {
-  display: inline-block;
-  white-space: nowrap;
-}
-
-/* Dark scenes (defaults): cream strip, ink names, coral active pill. */
-
-html[data-theme='dark'] .nav-strip {
-  background-color: var(--warm-white);
-}
-
-html[data-theme='dark'] .strip-dot.is-active {
-  background-color: var(--coral-deep);
-  color: var(--white);
-}
-
-html[data-theme='dark'] .strip-dot.is-active .dot {
-  border-color: var(--warm-white);
-  background-color: var(--warm-white);
-}
-
-/* Light scenes: coral strip, ink logo/CTA, ink active pill
-   (cream on coral is poor contrast, per the brief). */
-
-html[data-theme='light'] .brand {
-  color: var(--ink);
-}
-
-html[data-theme='light'] .contact-cta {
-  background-color: var(--ink);
-  color: var(--warm-white);
-}
-
-html[data-theme='light'] .contact-cta:hover,
-html[data-theme='light'] .contact-cta:focus-visible {
-  background-color: #232f3b;
-}
-
-html[data-theme='light'] .nav-strip {
-  background-color: var(--coral);
-}
-
-html[data-theme='light'] .strip-item,
-html[data-theme='light'] .strip-dot {
-  color: var(--ink);
-}
-
-html[data-theme='light'] .strip-sep {
-  color: rgba(23, 33, 43, 0.55);
-}
-
-html[data-theme='light'] .strip-dot .dot {
-  border-color: var(--ink);
-}
-
-html[data-theme='light'] .strip-dot.is-active {
-  background-color: var(--ink);
-  color: var(--warm-white);
-}
-
-html[data-theme='light'] .strip-dot.is-active .dot {
-  border-color: var(--coral);
-  background-color: var(--coral);
-}
-
+/* Three pieces; one scene signal, one 200ms capsule morph. */
+.site-header { position: fixed; inset: 0 0 auto; z-index: 100; pointer-events: none; }
+.site-header-inner { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; height: 56px; padding: 0 3px; }
+.site-header a { pointer-events: auto; }
+.brand { justify-self: start; display: block; padding: 0 2px; color: var(--warm-white); text-decoration: none; }
+/* ≥768px: full lockup at the approved mock's proportions; below: symbol only. */
+.brand-art { display: block; width: 98px; height: 44px; background: url('/brand/logo-white.svg') center / contain no-repeat; }
+html[data-theme='light'] .brand-art { background-image: url('/brand/logo-primary.svg'); }
+.brand-art img { display: none; }
+html[data-scene='hinga'] .brand-art { color: var(--ink); }
+.contact-cta { justify-self: end; margin-right: 27px; display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: .5rem 1.15rem; border-radius: 999px; background: var(--coral-text); color: var(--warm-white); font-size: .9rem; font-weight: 600; text-decoration: none; white-space: nowrap; transition: background-color 280ms var(--ease); }
+.contact-phone { display: none; }
+html[data-theme='light'] .contact-cta { background: var(--ink); }
+.contact-cta:hover, .contact-cta:focus-visible { background: var(--ink); }
+.nav-strip { position: relative; justify-self: center; width: 260px; height: 48px; border-radius: 999px; background: var(--warm-white); transition: width 200ms var(--ease), background-color 280ms var(--ease); }
+html[data-strip='dots'] .nav-strip { width: 176px; }
+.strip-names, .strip-dots { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; white-space: nowrap; opacity: 1; transition: clip-path 200ms var(--ease), visibility 200ms; }
+.strip-names { gap: 8px; clip-path: inset(0); }
+.strip-dots { gap: 4px; clip-path: inset(0 100% 0 0); visibility: hidden; pointer-events: none; }
+html[data-strip='dots'] .strip-names { clip-path: inset(0 0 0 100%); visibility: hidden; pointer-events: none; }
+html[data-strip='dots'] .strip-dots { clip-path: inset(0); visibility: visible; pointer-events: auto; }
+.strip-item { display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; color: var(--ink); font-size: .9rem; font-weight: 600; text-decoration: none; }
+.strip-item:hover { text-decoration: underline; }
+.strip-dot { display: inline-flex; align-items: center; justify-content: center; min-width: 32px; min-height: 36px; gap: 0; padding: 0 8px; color: var(--ink); border-radius: 999px; font-size: .85rem; font-weight: 600; text-decoration: none; }
+.strip-dot .dot { flex: 0 0 8px; width: 8px; height: 8px; border: 1.5px solid currentColor; border-radius: 50%; }
+.dot-label:empty { display: none; }
+.strip-dot.is-active { gap: 7px; background: var(--coral-text); color: var(--warm-white); }
+.strip-dot.is-active .dot { background: currentColor; }
+html[data-theme='light'] .nav-strip { background: var(--coral); }
+html[data-theme='light'] .strip-dot.is-active { background: var(--ink); }
+/* Landing always has a cream capsule with names and no active section. */
+html[data-scene='landing'] .nav-strip { background: var(--warm-white); }
+.site-header a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
 @media (max-width: 47.99rem) {
-  .site-header-inner {
-    padding: 0.75rem 1rem;
-  }
-
-  .brand {
-    font-size: 1rem;
-  }
-
-  .contact-cta {
-    padding: 0.4rem 0.9rem;
-    font-size: 0.85rem;
-  }
+  .site-header-inner { grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); padding: 0 16px; }
+  .brand { padding: 0 2px; margin-left: 0; }
+  .brand-art { width: 36px; height: 36px; background-image: url('/brand/symbol-white.svg'); }
+  html[data-theme='light'] .brand-art { background-image: url('/brand/symbol-primary.svg'); }
+  .nav-strip { width: 190px; height: 44px; }
+  html[data-strip='dots'] .nav-strip { width: 160px; }
+  .strip-names { gap: 0; }
+  .strip-item { padding: 0 10px; font-size: 12px; }
+  .strip-dot { font-size: 12px; }
+  .contact-cta, html[data-theme='light'] .contact-cta { width: 44px; height: 44px; padding: 0; margin-right: 0; background: var(--coral-text); }
+  .contact-label { display: none; }
+  .contact-phone { display: block; }
 }
+@media (prefers-reduced-motion: reduce) {
+  .nav-strip, .strip-names, .strip-dots, .contact-cta, .strip-dot.is-active { transition: none; }
+}
+
+html[data-scene='hinga'] .brand-art { color: var(--ink); }

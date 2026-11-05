@@ -19,7 +19,7 @@ export default function SmoothScroll() {
     const sync = () => {
       stop();
       if (reduced.matches || touch.matches) return;
-      lenis = new Lenis({ duration: 1.15, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+      lenis = new Lenis({ duration: 0.85, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
       lenisRef.current = lenis;
       const raf = (time) => {
         lenis.raf(time);

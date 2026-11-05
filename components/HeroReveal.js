@@ -43,7 +43,7 @@ export default function HeroReveal() {
       document.querySelectorAll('.hero-line')[1],
     ];
     const button = document.querySelector('.hero-copy .button');
-    if (!lines[0] || !lines[1] || !button) {
+    if (!lines[0] || !lines[1]) {
       return undefined;
     }
 
@@ -51,7 +51,7 @@ export default function HeroReveal() {
     // there is no flash of the final state (useLayoutEffect: pre-paint).
     gsap.set(lines[0], { y: 24, opacity: 0 });
     gsap.set(lines[1], { y: 24, opacity: 0 });
-    gsap.set(button, { y: 16, opacity: 0 });
+    if (button) gsap.set(button, { y: 16, opacity: 0 });
 
     const timeline = gsap.timeline({ paused: false });
 
@@ -72,7 +72,7 @@ export default function HeroReveal() {
       },
       0.1
     );
-    timeline.to(
+    if (button) timeline.to(
       button,
       {
         y: 0,

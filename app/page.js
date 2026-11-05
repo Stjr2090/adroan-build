@@ -43,9 +43,6 @@ export default function HomePage() {
             <p className="hero-sub">
               We believe the people closest to a challenge should help shape the technology built around it. HINGA explores that idea in agriculture, starting with farmers and the wider value chain.
             </p>
-            <Link href="/contact" className="button">
-              Contact us
-            </Link>
           </div>
         </div>
       </section>

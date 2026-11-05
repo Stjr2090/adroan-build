@@ -1,3 +1,5 @@
+import localFont from 'next/font/local';
+import BrandLockup from '@/components/BrandLockup';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import './page-transitions.css';
@@ -11,6 +13,8 @@ const inter = Inter({
   display: 'swap',
 });
 
+const jakarta = localFont({ src: '../public/fonts/PlusJakartaSans.ttf', variable: '--font-jakarta', display: 'swap', weight: '200 800' });
+
 export const metadata = {
   title: 'Adroan – Technology built with communities, for communities',
   description: 'Technology built with communities, for communities.',
@@ -18,7 +22,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={inter.variable}>
+    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${jakarta.variable}`}>
       <body>
         {/* Parse-time, pre-paint: align the route's scene/theme/strip before
             the header can paint, so sub-pages (e.g. /hinga) never flash the
@@ -29,14 +33,15 @@ export default function RootLayout({ children }) {
               "(function(){var p=location.pathname.replace(/\\/+$/,'').replace(/^\\/+/,'')||'landing';" +
               "var r=document.documentElement;" +
               "r.setAttribute('data-scene',p);" +
-              "r.setAttribute('data-theme',['about','team','contact'].indexOf(p)!==-1?'light':'dark');" +
-              "r.setAttribute('data-strip',p==='landing'&&window.matchMedia('(min-width: 48rem)').matches?'names':'dots');})();",
+              "r.setAttribute('data-theme',['about','team','contact','hinga'].indexOf(p)!==-1?'light':'dark');" +
+              "r.setAttribute('data-strip',p==='landing'?'names':'dots');})();",
           }}
         />
         <SiteHeader />
         <main className="page">{children}</main>
         <footer className="site-footer">
           <div className="footer-inner">
+            <a href="/" className="footer-brand" aria-label="Adroan home"><BrandLockup /></a>
             <p className="footer-note">
               Adroan · email · socials · Photo: Robin Kutesa on Unsplash
             </p>
