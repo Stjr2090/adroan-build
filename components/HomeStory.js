@@ -1,70 +1,40 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useLayoutEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-// Scroll story for the homepage (wireframe v3 + brief #1319):
-// - Landing photo opacity is scrubbed with scroll: fully visible at the top,
-//   faded out as the About wash approaches, faded back in on the way up.
-// - The HINGA card copy morphs in (scrubbed) as the Projects scene darkens.
-// Under prefers-reduced-motion nothing is animated: the final state stands.
 export default function HomeStory() {
-  useEffect(() => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      return undefined;
-    }
-
+  useLayoutEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
-
-    const photo = document.querySelector('.hero-photo');
-    if (photo) {
-      gsap.fromTo(
-        photo,
-        { autoAlpha: 1 },
-        {
-          autoAlpha: 0,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: '#landing',
-            start: 'top top',
-            end: 'bottom top',
-            scrub: true,
-          },
-        }
-      );
-    }
-
-    const hingaCopy = document.querySelector('.hinga-copy');
-    if (hingaCopy) {
-      gsap.fromTo(
-        hingaCopy,
-        { y: 16, autoAlpha: 0 },
-        {
-          y: 0,
-          autoAlpha: 1,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: '#projects',
-            start: 'top 80%',
-            end: 'top 30%',
-            scrub: true,
-          },
-        }
-      );
-    }
-
-    return () => {
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-      // Guard the reset with a live-node check: on client-side navigation the
-      // old page's nodes are already gone when this runs, and re-selecting by
-      // class would only log a "target not found" warning.
-      const targets = [photo, hingaCopy].filter((el) => el && el.isConnected);
-      if (targets.length) {
-        gsap.set(targets, { clearProps: 'all' });
-      }
-    };
+    const media = gsap.matchMedia();
+    media.add('(prefers-reduced-motion: no-preference)', () => {
+      document.documentElement.classList.add('home-story-motion');
+      const layers = gsap.utils.toArray('.wash-layer');
+      const scenes = gsap.utils.toArray('.scene');
+      gsap.fromTo('.hero-photo', { autoAlpha: 1 }, {
+        autoAlpha: 0, ease: 'none',
+        scrollTrigger: { trigger: '#landing', start: 'top top', end: 'bottom top', scrub: true },
+      });
+      gsap.to('.hero-copy', { y: -16, opacity: 0, ease: 'none',
+        scrollTrigger: { trigger: '#landing', start: 'top top', end: 'bottom 20%', scrub: true },
+      });
+      scenes.slice(1).forEach((scene, index) => {
+        // Each scene's own approved gradient rides in as one fixed layer,
+        // covering the layer below it; the layers never merge.
+        gsap.fromTo(layers[index + 1], { opacity: 0 }, {
+          opacity: 1, immediateRender: false, ease: 'none',
+          scrollTrigger: { trigger: scene, start: 'top bottom', end: 'top 60%', scrub: true },
+        });
+        const targets = scene.querySelectorAll('.scene-title, .about-copy p, .pillar-card, .hinga-copy > p, .hinga-cta, .hinga-image, .team-card');
+        gsap.fromTo(targets, { y: 16, opacity: 0 }, {
+          y: 0, opacity: 1, stagger: 0.06, ease: 'none',
+          scrollTrigger: { trigger: scene, start: 'top 60%', end: 'top 15%', scrub: true },
+        });
+      });
+      return () => document.documentElement.classList.remove('home-story-motion');
+    });
+    return () => media.revert();
   }, []);
-
   return null;
 }

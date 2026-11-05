@@ -30,9 +30,9 @@ export default function SiteHeader() {
   const reducedMotion = useReducedMotion();
 
   // Scene: which of the four homepage scenes (or separate page) owns the
-  // viewport middle. Initial value matches the SSR attributes in layout.js;
-  // separate pages get their scene from the pathname on first mount.
-  const [scene, setScene] = useState('landing');
+  // viewport middle. Initial value follows the route, matching the parse-time
+  // script in layout.js, so hydration never flips a sub-page's theme.
+  const [scene, setScene] = useState(() => sceneFromPath(pathname));
   const [scrolled, setScrolled] = useState(false);
   // Read synchronously (not via effect) so the very first client commit
   // already knows the strip mode; the data-strip attribute is written
