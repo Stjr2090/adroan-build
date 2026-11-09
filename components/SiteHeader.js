@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useReducedMotion } from 'motion/react';
 import { lenisRef } from '@/lib/lenis';
-import { publishHomeScene } from '@/lib/home-scene';
+import { publishHomeScene, syncHeaderBackdrop } from '@/lib/home-scene';
 import BrandLockup from './BrandLockup';
 import './site-header.css';
 
@@ -52,6 +52,25 @@ export default function SiteHeader() {
       window.removeEventListener('adroan:scene', onScene);
     };
   }, [isHome, pathname]);
+
+  useEffect(() => {
+    let frame = 0;
+    const sync = () => {
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        syncHeaderBackdrop();
+      });
+    };
+    syncHeaderBackdrop();
+    window.addEventListener('scroll', sync, { passive: true });
+    window.addEventListener('resize', sync);
+    return () => {
+      if (frame) cancelAnimationFrame(frame);
+      window.removeEventListener('scroll', sync);
+      window.removeEventListener('resize', sync);
+    };
+  }, []);
 
   const scrollToSection = (event, id) => {
     if (!isHome) return;

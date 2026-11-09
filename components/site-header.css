@@ -5,7 +5,7 @@
 .brand { justify-self: start; display: block; padding: 0 2px; color: var(--warm-white); text-decoration: none; }
 /* ≥768px: full lockup at the approved mock's proportions; below: symbol only. */
 .brand-art { display: block; width: 98px; height: 44px; background: url('/brand/logo-white.svg') center / contain no-repeat; }
-html[data-theme='light'] .brand-art { background-image: url('/brand/logo-primary.svg'); }
+html[data-header-backdrop='light'] .brand-art { background-image: url('/brand/logo-primary.svg'); }
 .brand-art img { display: none; }
 html[data-scene='hinga'] .brand-art { color: var(--ink); }
 .contact-cta { justify-self: end; margin-right: 27px; display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: .5rem 1.15rem; border-radius: 999px; background: var(--coral-text); color: var(--warm-white); font-size: .9rem; font-weight: 600; text-decoration: none; white-space: nowrap; transition: background-color 280ms var(--ease); }
@@ -35,7 +35,7 @@ html[data-scene='landing'] .nav-strip { background: var(--warm-white); }
   .site-header-inner { grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); padding: 0 16px; }
   .brand { padding: 0 2px; margin-left: 0; }
   .brand-art { width: 36px; height: 36px; background-image: url('/brand/symbol-white.svg'); }
-  html[data-theme='light'] .brand-art { background-image: url('/brand/symbol-primary.svg'); }
+  html[data-header-backdrop='light'] .brand-art { background-image: url('/brand/symbol-primary.svg'); }
   .nav-strip { width: 190px; height: 44px; }
   html[data-strip='dots'] .nav-strip { width: 160px; }
   .strip-names { gap: 0; }

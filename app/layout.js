@@ -34,7 +34,9 @@ export default function RootLayout({ children }) {
               "var r=document.documentElement;" +
               "r.setAttribute('data-scene',p);" +
               "r.setAttribute('data-theme',['about','team','contact','hinga'].indexOf(p)!==-1?'light':'dark');" +
-              "r.setAttribute('data-strip',p==='landing'?'names':'dots');})();",
+              "r.setAttribute('data-strip',p==='landing'?'names':'dots');" +
+              "var h=location.hash.replace('#','');" +
+              "r.setAttribute('data-header-backdrop',p==='landing'?(h==='projects'?'light':'dark'):(['about','team','contact','hinga'].indexOf(p)!==-1?'light':'dark'));})();",
           }}
         />
         <SiteHeader />
