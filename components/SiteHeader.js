@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useReducedMotion } from 'motion/react';
 import { lenisRef } from '@/lib/lenis';
+import BrandLockup from './BrandLockup';
 import './site-header.css';
 
 const SECTIONS = [
@@ -13,7 +14,7 @@ const SECTIONS = [
   { id: 'team', label: 'Team' },
 ];
 
-const LIGHT_SCENES = ['about', 'team', 'contact'];
+const LIGHT_SCENES = ['about', 'team', 'contact', 'hinga'];
 
 // Each scene's pill palette is fixed by its own theme (About/Team are light,
 // Projects dark). Marking that on the dot itself keeps the pill colours
@@ -23,6 +24,41 @@ const sceneTheme = (id) => (LIGHT_SCENES.includes(id) ? 'light' : 'dark');
 // Normalise a pathname to a scene id: '/contact' -> 'contact', '/' -> 'landing'.
 const sceneFromPath = (path) =>
   path === '/' ? 'landing' : path.replace(/^\//, '');
+
+// Header art follows the backdrop under the fixed header, not the scene theme.
+// Motion mode crossfades one full-viewport wash layer, so the scene theme is
+// the backdrop there. Static/reduced motion keeps each scene's own gradient,
+// so the scene's 22% top band decides; the 8px hysteresis keeps the lockup
+// from oscillating on the ramp.
+function syncHeaderBackdrop() {
+  const root = document.documentElement;
+  const scenes = document.querySelectorAll('.scene');
+  let next;
+  if (!scenes.length || root.classList.contains('home-story-motion')) {
+    next = root.dataset.theme === 'light' ? 'light' : 'dark';
+  } else {
+    const y = window.scrollY + 28;
+    let current = scenes[0];
+    for (const scene of scenes) {
+      if (scene.getBoundingClientRect().top + window.scrollY <= y) current = scene;
+    }
+    const top = current.getBoundingClientRect().top + window.scrollY;
+    const edge = top + (current.offsetHeight || window.innerHeight) * 0.22;
+    const state = root.dataset.headerBackdrop;
+    if (current.id === 'projects') {
+      next = state === 'light' ? (y > edge + 4 ? 'dark' : 'light')
+        : state === 'dark' ? (y < edge - 4 ? 'light' : 'dark')
+          : (y < edge ? 'light' : 'dark');
+    } else if (current.id === 'about' || current.id === 'team') {
+      next = state === 'dark' ? (y > edge + 4 ? 'light' : 'dark')
+        : state === 'light' ? (y < edge - 4 ? 'dark' : 'light')
+          : (y < edge ? 'dark' : 'light');
+    } else {
+      next = 'dark';
+    }
+  }
+  if (next !== root.dataset.headerBackdrop) root.setAttribute('data-header-backdrop', next);
+}
 
 export default function SiteHeader() {
   const pathname = usePathname();
@@ -74,6 +110,7 @@ export default function SiteHeader() {
     root.setAttribute('data-theme', sceneTheme(scene));
     root.setAttribute('data-scrolled', scrolled ? '1' : '0');
     root.setAttribute('data-strip', isHome && scene === 'landing' && wide ? 'names' : 'dots');
+    syncHeaderBackdrop();
   }, [scene, scrolled, isHome, wide, pathname]);
 
   // When the active scene changes, the pill that is leaving retracts to an
@@ -166,7 +203,10 @@ export default function SiteHeader() {
   }, []);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
+    const onScroll = () => {
+      setScrolled(window.scrollY > 24);
+      syncHeaderBackdrop();
+    };
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
@@ -218,8 +258,8 @@ export default function SiteHeader() {
   return (
     <header className="site-header">
       <div className="site-header-inner">
-        <Link href="/" className="brand">
-          Adroan
+        <Link href="/" className="brand" aria-label="Adroan home">
+          <BrandLockup />
         </Link>
 
         <nav ref={navStripRef} className="nav-strip" aria-label="Main navigation">

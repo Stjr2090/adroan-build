@@ -71,17 +71,21 @@ a {
   text-underline-offset: 3px;
 }
 
+h1, h2, h3 {
+  font-family: var(--font-jakarta), sans-serif;
+}
+
 h1 {
   font-size: clamp(2rem, 5vw, 3rem);
   line-height: 1.15;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: -0.02em;
 }
 
 h2 {
   font-size: 1.375rem;
   line-height: 1.3;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .page {
@@ -146,7 +150,7 @@ h2 {
 }
 
 .button:hover {
-  background-color: var(--coral);
+  background-color: var(--ink);
 }
 
 .button:focus-visible {
@@ -247,3 +251,7 @@ html[data-scene='hinga'] .site-footer {
   font-style: italic;
   opacity: 0.55;
 }
+
+.footer-brand { display: inline-block; color: var(--warm-white); padding: 6px 2px; margin-bottom: 1rem; }
+.footer-brand .brand-art { width: 98px; height: 44px; background: url('/brand/logo-white.svg') center / contain no-repeat; }
+html[data-scene='hinga'] .footer-brand .brand-art { background-image: url('/brand/logo-primary.svg'); }

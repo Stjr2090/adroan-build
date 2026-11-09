@@ -21,20 +21,34 @@
 
 .site-header-inner {
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
   max-width: 100%;
-  padding: 1rem 1.5rem;
+  height: 56px;
+  padding: 0 1.5rem;
 }
 
 .brand {
   justify-self: start;
+  display: block;
   font-size: 1.125rem;
   font-weight: 600;
   letter-spacing: 0.01em;
   color: var(--warm-white);
   text-decoration: none;
   transition: color var(--dur-base) var(--ease);
+}
+
+/* ≥768px: full lockup at the approved proportions; below: symbol only. */
+.brand-art {
+  display: block;
+  width: 98px;
+  height: 44px;
+  background: url('/brand/logo-white.svg') center / contain no-repeat;
+}
+
+html[data-header-backdrop='light'] .brand-art {
+  background-image: url('/brand/logo-primary.svg');
 }
 
 .contact-cta {
@@ -54,7 +68,7 @@
 
 .contact-cta:hover,
 .contact-cta:focus-visible {
-  background-color: var(--coral);
+  background-color: var(--ink);
 }
 
 /* Centre strip (both modes share the capsule) */
@@ -469,11 +483,21 @@ html[data-theme='light'] .strip-dot.is-active .dot {
 
 @media (max-width: 47.99rem) {
   .site-header-inner {
-    padding: 0.75rem 1rem;
+    padding: 0 16px;
   }
 
   .brand {
     font-size: 1rem;
+  }
+
+  .brand-art {
+    width: 36px;
+    height: 36px;
+    background-image: url('/brand/symbol-white.svg');
+  }
+
+  html[data-header-backdrop='light'] .brand-art {
+    background-image: url('/brand/symbol-primary.svg');
   }
 
   .contact-cta {
