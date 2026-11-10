@@ -219,12 +219,34 @@ export default function SiteHeader() {
       setDotActive(null);
       return undefined;
     }
+    // Motion mode: HomeStory publishes the scene on the wash frame, so the
+    // header, strip and backdrop change together with the gradient landing.
+    // Write the three attributes in this tick; React below only drives the
+    // pill/dot UI, whose render can land on the next paint.
+    const onScene = (event) => {
+      const id = event.detail;
+      const root = document.documentElement;
+      root.setAttribute('data-scene', id);
+      root.setAttribute('data-theme', sceneTheme(id));
+      root.setAttribute(
+        'data-strip',
+        isHome && id === 'landing' && window.matchMedia('(min-width: 48rem)').matches
+          ? 'names'
+          : 'dots'
+      );
+      syncHeaderBackdrop();
+      setScene(id);
+      setDotActive(id === 'landing' ? null : id);
+    };
+    window.addEventListener('adroan:scene', onScene);
+    // Reduced motion has no wash: keep the intersection observer fallback.
     const ids = ['landing', ...SECTIONS.map((section) => section.id)];
     const elements = ids
       .map((id) => document.getElementById(id))
       .filter((element) => element);
     const observer = new IntersectionObserver(
       (entries) => {
+        if (document.documentElement.classList.contains('home-story-motion')) return;
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             const id = entry.target.id;
@@ -236,7 +258,10 @@ export default function SiteHeader() {
       { rootMargin: '-45% 0px -45% 0px', threshold: 0 }
     );
     elements.forEach((element) => observer.observe(element));
-    return () => observer.disconnect();
+    return () => {
+      window.removeEventListener('adroan:scene', onScene);
+      observer.disconnect();
+    };
   }, [isHome, pathname]);
 
   const scrollToSection = (event, id) => {
@@ -362,8 +387,22 @@ export default function SiteHeader() {
           </div>
         </nav>
 
-        <Link href="/contact" className="contact-cta">
-          Contact us
+        <Link href="/contact" className="contact-cta" aria-label="Contact us">
+          <span className="contact-label">Contact us</span>
+          <svg
+            className="contact-phone"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M22 16.9v3a2 2 0 0 1-2.2 2A19.8 19.8 0 0 1 3.1 5.2 2 2 0 0 1 5.1 3h3a1 1 0 0 1 1 .9l.6 3a1 1 0 0 1-.3 1l-1.6 1.6a16 16 0 0 0 6.7 6.7l1.6-1.6a1 1 0 0 1 1-.3l3 .6a1 1 0 0 1 .9 1z" />
+          </svg>
         </Link>
       </div>
     </header>

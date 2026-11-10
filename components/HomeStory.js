@@ -12,6 +12,7 @@ export default function HomeStory() {
       document.documentElement.classList.add('home-story-motion');
       const layers = gsap.utils.toArray('.wash-layer');
       const scenes = gsap.utils.toArray('.scene');
+      const publish = (id) => window.dispatchEvent(new CustomEvent('adroan:scene', { detail: id }));
       gsap.fromTo('.hero-photo', { autoAlpha: 1 }, {
         autoAlpha: 0, ease: 'none',
         scrollTrigger: { trigger: '#landing', start: 'top top', end: 'bottom top', scrub: true },
@@ -30,6 +31,15 @@ export default function HomeStory() {
         gsap.fromTo(targets, { y: 16, opacity: 0 }, {
           y: 0, opacity: 1, stagger: 0.06, ease: 'none',
           scrollTrigger: { trigger: scene, start: 'top 60%', end: 'top 15%', scrub: true },
+        });
+        // Publish the scene on the same frame the wash lands: the same
+        // "top 60%" edge the gradient uses, in both scroll directions.
+        ScrollTrigger.create({
+          trigger: scene,
+          start: 'top 60%',
+          end: 'bottom top',
+          onEnter: () => publish(scene.id),
+          onLeaveBack: () => publish(scenes[index].id),
         });
       });
       return () => document.documentElement.classList.remove('home-story-motion');

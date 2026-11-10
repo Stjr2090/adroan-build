@@ -47,7 +47,7 @@
   background: url('/brand/logo-white.svg') center / contain no-repeat;
 }
 
-html[data-header-backdrop='light'] .brand-art {
+html[data-header-backdrop='light'] .site-header .brand-art {
   background-image: url('/brand/logo-primary.svg');
 }
 
@@ -69,6 +69,10 @@ html[data-header-backdrop='light'] .brand-art {
 .contact-cta:hover,
 .contact-cta:focus-visible {
   background-color: var(--ink);
+}
+
+.contact-phone {
+  display: none;
 }
 
 /* Centre strip (both modes share the capsule) */
@@ -496,12 +500,25 @@ html[data-theme='light'] .strip-dot.is-active .dot {
     background-image: url('/brand/symbol-white.svg');
   }
 
-  html[data-header-backdrop='light'] .brand-art {
+  html[data-header-backdrop='light'] .site-header .brand-art {
     background-image: url('/brand/symbol-primary.svg');
   }
 
   .contact-cta {
-    padding: 0.4rem 0.9rem;
-    font-size: 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    margin-right: 0;
+  }
+
+  .contact-label {
+    display: none;
+  }
+
+  .contact-phone {
+    display: block;
   }
 }
