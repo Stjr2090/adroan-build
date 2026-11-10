@@ -221,9 +221,22 @@ export default function SiteHeader() {
     }
     // Motion mode: HomeStory publishes the scene on the wash frame, so the
     // header, strip and backdrop change together with the gradient landing.
+    // Write the three attributes in this tick; React below only drives the
+    // pill/dot UI, whose render can land on the next paint.
     const onScene = (event) => {
-      setScene(event.detail);
-      setDotActive(event.detail === 'landing' ? null : event.detail);
+      const id = event.detail;
+      const root = document.documentElement;
+      root.setAttribute('data-scene', id);
+      root.setAttribute('data-theme', sceneTheme(id));
+      root.setAttribute(
+        'data-strip',
+        isHome && id === 'landing' && window.matchMedia('(min-width: 48rem)').matches
+          ? 'names'
+          : 'dots'
+      );
+      syncHeaderBackdrop();
+      setScene(id);
+      setDotActive(id === 'landing' ? null : id);
     };
     window.addEventListener('adroan:scene', onScene);
     // Reduced motion has no wash: keep the intersection observer fallback.
