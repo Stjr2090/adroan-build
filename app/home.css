@@ -190,9 +190,12 @@ html.js-hero .hero-copy .button {
   background-color: rgba(23, 33, 43, 0.1);
 }
 
-.pillar-card span {
-  font-size: 0.875rem;
-  color: rgba(23, 33, 43, 0.6);
+.pillar-card h3 {
+  font-size: 1.1rem;
+}
+
+.pillar-card p {
+  margin-top: 0.75rem;
 }
 
 /* 3 — Projects: dark, Ember Dusk; washes back to dark. */
@@ -330,6 +333,7 @@ html.js-hero .hero-copy .button {
 }
 
 .team-photo {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -339,6 +343,11 @@ html.js-hero .hero-copy .button {
   background-color: rgba(23, 33, 43, 0.12);
   color: rgba(23, 33, 43, 0.85);
   font-size: 0.8rem;
+  overflow: hidden;
+}
+
+.team-photo img {
+  object-fit: cover;
 }
 
 .team-name {

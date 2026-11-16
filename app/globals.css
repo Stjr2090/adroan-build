@@ -180,6 +180,15 @@ html[data-scene='hinga'] .site-footer {
   color: rgba(255, 253, 248, 0.72);
 }
 
+.footer-inner a:not(.footer-brand) {
+  color: var(--warm-white);
+  margin-right: 1rem;
+}
+
+html[data-scene='hinga'] .footer-inner a:not(.footer-brand) {
+  color: #233122;
+}
+
 /* Contact page — light, full-bleed, narrow column. */
 
 .page-contact {
@@ -190,6 +199,10 @@ html[data-scene='hinga'] .site-footer {
 .page-contact .page-header,
 .page-contact .contact-section {
   max-width: 28rem;
+}
+
+.page-contact .page-header p + p {
+  margin-top: 1rem;
 }
 
 .contact-form {
