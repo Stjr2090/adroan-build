@@ -21,8 +21,8 @@ const jakarta = localFont({
 });
 
 export const metadata = {
-  title: 'Adroan – Technology built with communities, for communities',
-  description: 'Technology built with communities, for communities.',
+  title: 'Adroan – Solutions built with communities, for communities',
+  description: 'Solutions built with communities, for communities.',
 };
 
 export default function RootLayout({ children }) {
@@ -49,9 +49,11 @@ export default function RootLayout({ children }) {
         <footer className="site-footer">
           <div className="footer-inner">
             <a href="/" className="footer-brand" aria-label="Adroan home"><BrandLockup /></a>
-            <p className="footer-note">
-              Adroan · email · socials · Photo: Robin Kutesa on Unsplash
-            </p>
+            <p className="footer-note">Solutions built with communities, for communities.</p>
+            <a href="mailto:hello@adroan.tech">hello@adroan.tech</a>
+            <a href="tel:+256787728020">+256787728020</a>
+            <a href="https://hingaai.tech" target="_blank" rel="noopener noreferrer">HINGA</a>
+            <p className="footer-note">Photo: Robin Kutesa on Unsplash</p>
           </div>
         </footer>
         <SmoothScroll />

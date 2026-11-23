@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import HomeStory from '@/components/HomeStory';
 import HeroReveal from '@/components/HeroReveal';
 import './home.css';
@@ -36,12 +37,12 @@ export default function HomePage() {
         <div className="scene-inner">
           <div className="hero-copy">
             <h1 className="hero-title">
-              <span className="hero-line">Technology built with communities,</span>
+              <span className="hero-line">Solutions built with communities,</span>
               <br />
               <span className="hero-line">for communities.</span>
             </h1>
             <p className="hero-sub">
-              We believe the people closest to a challenge should help shape the technology built around it. HINGA explores that idea in agriculture, starting with farmers and the wider value chain.
+              We believe the people closest to a challenge should help shape the solutions built around it. HINGA puts that idea into practice in agriculture, starting with farmers and the wider value chain.
             </p>
             <Link href="/contact" className="button">
               Contact us
@@ -53,16 +54,18 @@ export default function HomePage() {
       <section id="about" className="scene scene-about">
         <div className="scene-inner about-inner">
           <div className="about-copy">
-            <h2 className="scene-title">About Adroan</h2>
-            <p>Adroan is guided by a simple promise: technology built with communities, for communities.</p>
-            <p>We want to understand people's needs and context, and use that understanding to shape useful technology.</p>
+            <h2 className="scene-title">Built around people and context.</h2>
+            <p>Adroan is guided by a simple promise: solutions built with communities, for communities.</p>
+            <p>We work to understand people's needs and context, then use that understanding to shape useful solutions.</p>
           </div>
           <div className="pillar-grid">
             <div className="pillar-card">
-              <span>value / pillar</span>
+              <h3>Start with context</h3>
+              <p>We begin by understanding the people closest to a challenge. Their needs and experience should shape the work from the start.</p>
             </div>
             <div className="pillar-card">
-              <span>value / pillar</span>
+              <h3>Build with communities</h3>
+              <p>We want communities to help shape the solutions built around them. That means asking better questions, listening carefully and leaving room for the work to change.</p>
             </div>
           </div>
         </div>
@@ -70,20 +73,17 @@ export default function HomePage() {
 
       <section id="projects" className="scene scene-projects">
         <div className="scene-inner projects-inner">
-          <h2 className="scene-title">Projects</h2>
+          <h2 className="scene-title">What we are building</h2>
           <div className="hinga-card">
             <div className="hinga-copy">
               <p className="hinga-name">HINGA</p>
               <p>Connecting agriculture, from farmers to markets.</p>
-              <p>HINGA's first version gives farmers a way to ask questions about farming. Its next direction is agricultural data: helping farmers connect with one another and closing the loop between the farm end of the value chain and the exporters and buyers at the other end.</p>
-              <p>The aim is to bring people across that chain closer together, starting with the farmers whose work underpins it.</p>
+              <p>HINGA's first version helps farmers ask questions about farming. Its next direction is agricultural data that can connect farmers and bring them closer to exporters and buyers.</p>
               <Link href="/hinga" className="hinga-cta">
                 Explore HINGA <span aria-hidden="true">→</span>
               </Link>
             </div>
-            <div className="hinga-image" role="img" aria-label="HINGA image placeholder">
-              HINGA image
-            </div>
+            <div className="hinga-image" aria-hidden="true" />
           </div>
         </div>
       </section>
@@ -93,25 +93,19 @@ export default function HomePage() {
           <h2 className="scene-title">Meet the people behind Adroan.</h2>
           <div className="team-grid">
             <div className="team-card">
-              <div className="team-photo" aria-hidden="true">
-                portrait
-              </div>
-              <p className="team-name">Name</p>
-              <p className="team-role">Role</p>
+              <div className="team-photo"><Image src="/team/VIVI5564-headshot.png" alt="Portrait of Kinaalwa Jeremiah" fill sizes="(min-width: 48rem) 14rem, 100vw" /></div>
+              <p className="team-name">Kinaalwa Jeremiah</p>
+              <p className="team-role">Head Legal and compliance &amp; Partnerships</p>
             </div>
             <div className="team-card">
-              <div className="team-photo" aria-hidden="true">
-                portrait
-              </div>
-              <p className="team-name">Name</p>
-              <p className="team-role">Role</p>
+              <div className="team-photo"><Image src="/team/VIVI5568-headshot.png" alt="Portrait of Tumusiime Stephen" fill sizes="(min-width: 48rem) 14rem, 100vw" /></div>
+              <p className="team-name">Tumusiime Stephen</p>
+              <p className="team-role">Team Lead and CTO</p>
             </div>
             <div className="team-card">
-              <div className="team-photo" aria-hidden="true">
-                portrait
-              </div>
-              <p className="team-name">Name</p>
-              <p className="team-role">Role</p>
+              <div className="team-photo"><Image src="/team/IMG_9462-headshot.png" alt="Portrait of Kiyega Erick" fill sizes="(min-width: 48rem) 14rem, 100vw" /></div>
+              <p className="team-name">Kiyega Erick</p>
+              <p className="team-role">Operations Lead &amp; Business</p>
             </div>
           </div>
         </div>

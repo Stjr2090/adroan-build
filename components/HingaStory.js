@@ -13,11 +13,11 @@ const BEATS = [
   },
   {
     label: 'Problem',
-    text: "HINGA's first version gives farmers a way to ask questions about farming. Its next direction is agricultural data: helping farmers connect with one another and closing the loop between the farm end of the value chain and the exporters and buyers at the other end.",
+    text: "HINGA's first version helps farmers ask questions about farming. Its next direction is agricultural data that can connect farmers and bring them closer to exporters and buyers.",
   },
   {
     label: 'Idea',
-    text: 'The aim is to bring people across that chain closer together, starting with the farmers whose work underpins it.',
+    text: 'The wider data connection is a direction in development. It is not a live data platform, marketplace, SMS service or dashboard.',
   },
 ];
 
