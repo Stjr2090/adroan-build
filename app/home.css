@@ -268,7 +268,7 @@ html.js-hero .hero-copy .button {
   justify-content: center;
   aspect-ratio: 16 / 10;
   border-radius: 12px;
-  background-color: rgba(43, 53, 80, 0.85);
+  background: url('/images/hinga-drying-beds.jpg') center / cover no-repeat;
   color: rgba(255, 253, 248, 0.95);
   font-size: 0.875rem;
   padding: 0 1rem;

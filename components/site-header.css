@@ -538,16 +538,22 @@ html[data-theme='light'] .strip-dot.is-active .dot {
 }
 .brand-hinga-lockup .brand-hinga {
   display: block;
-  width: 42px;
-  height: 21px;
+  width: 54px;
+  height: 27px;
   background: url('/brand/hinga-logo-white.svg') center / contain no-repeat;
 }
 html[data-header-backdrop='light'] .site-header .brand-hinga-lockup .brand-hinga {
   background-image: url('/brand/hinga-logo.svg');
 }
 @media (max-width: 47.99rem) {
-  .site-header .brand-hinga-lockup .brand-divider,
+  .site-header .brand-hinga-lockup {
+    gap: 0.45rem;
+  }
+  .site-header .brand-hinga-lockup .brand-divider {
+    height: 16px;
+  }
   .site-header .brand-hinga-lockup .brand-hinga {
-    display: none;
+    width: 40px;
+    height: 20px;
   }
 }
