@@ -1,237 +1,487 @@
 /* HINGA palette is route-local; Adroan tokens remain unchanged. */
-.hinga-page {
-  background: #F3F5F0;
+
+:root {
+  --hinga-ink: #122b1d;
+  --hinga-warm-white: #f7f5ee;
+}
+
+/* Scene system: the homepage's pattern, scoped to /hinga. Four full-height
+   scenes; static gradients stay in place as the no-JS and reduced-motion
+   fallback, and motion mode crossfades fixed wash layers instead. */
+
+.hinga-scene {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  min-height: 100vh;
+  min-height: 100svh;
+  overflow: clip;
+}
+
+.hinga-scene-hero {
+  align-items: center;
+}
+
+.hinga-scene-inner {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: calc(56px + 1.5rem) 1.5rem 4rem;
+}
+
+.hinga-scene-hero .hinga-scene-inner {
+  padding-top: calc(56px + 2rem);
+}
+
+.hinga-scene-title {
+  font-size: clamp(2.5rem, 6vw, 3.75rem);
+  line-height: 1.3;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  overflow-wrap: anywhere;
+}
+
+/* 1 — Hero: full-bleed drying-beds photograph on a deep green base. */
+
+.hinga-scene-hero {
+  background-color: var(--hinga-ink);
+}
+
+.hinga-scene-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(46rem 30rem at 82% 18%, rgba(45, 90, 39, 0.45), transparent 70%),
+    radial-gradient(38rem 26rem at 12% 88%, rgba(22, 78, 71, 0.5), transparent 70%);
+}
+
+.hinga-hero-media {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.hinga-hero-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* The drying beds sit low in the frame; the open sky above the beds keeps
+     the headline clear, so the photo reads high on small viewports too. */
+  object-position: 50% 68%;
+}
+
+/* Same shade recipe as the home hero: text-side fade plus a soft dissolve
+   into the page colour at the bottom. No hard rectangle edge. */
+.hinga-hero-shade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, transparent 55%, var(--hinga-ink) 98%),
+    linear-gradient(
+      90deg,
+      rgba(18, 43, 29, 0.85) 0%,
+      rgba(18, 43, 29, 0.72) 55%,
+      transparent 90%
+    );
+}
+
+@media (max-width: 47.99rem) {
+  .hinga-hero-shade {
+    background: linear-gradient(
+      180deg,
+      rgba(18, 43, 29, 0.66) 0%,
+      rgba(18, 43, 29, 0.78) 70%,
+      var(--hinga-ink) 98%
+    );
+  }
+}
+
+.hinga-hero-title {
+  max-width: 52rem;
+  font-size: clamp(2.5rem, 6vw, 3.75rem);
+  line-height: 1.2;
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  color: var(--hinga-warm-white);
+}
+
+.hinga-hero-line {
+  display: inline-block;
+}
+
+/* Hero reveal start states, gated behind html.js-hinga (added pre-paint by
+   the inline script in page.js, cleared by HingaScenes whenever the reveal
+   does not run, so no-JS and reduced-motion users always see the final
+   state). */
+html.js-hinga .hinga-hero-line {
+  opacity: 0;
+  transform: translateY(24px);
+}
+
+html.js-hinga .hinga-hero-copy .hinga-button {
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.js-hinga .hinga-hero-line,
+  html.js-hinga .hinga-hero-copy .hinga-button {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.hinga-hero-sub {
+  margin-top: 0.75rem;
+  max-width: 36rem;
+  color: var(--hinga-warm-white);
+}
+
+.hinga-scene-hero .hinga-button {
+  margin-top: 1.75rem;
+}
+
+/* Buttons: deep green, HINGA's own accent instead of the coral home CTA. */
+
+.hinga-button {
+  display: inline-block;
+  padding: 0.65rem 1.3rem;
+  border: 0;
+  border-radius: 10px;
+  background-color: #2d5a27;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color var(--dur-fast, 150ms) var(--ease, ease);
+}
+
+.hinga-button:hover,
+.hinga-button:focus-visible {
+  background-color: var(--hinga-ink);
+}
+
+/* 2 — What HINGA does: light scene, washing in from the dark hero. */
+
+.hinga-scene-what {
+  background:
+    radial-gradient(52rem 34rem at 88% 30%, rgba(209, 229, 201, 0.55), transparent 70%),
+    linear-gradient(180deg, var(--hinga-ink) 0%, #f3f5f0 22%);
   color: #233122;
 }
 
-.hinga-page .page-header,
-.hinga-page .hinga-figure,
-.hinga-page .hinga-more {
+.hinga-what-inner {
   max-width: 44rem;
 }
 
-.hinga-page .intro {
-  color: #233122;
+.hinga-copy p {
+  margin-top: 1.1rem;
 }
 
-.hinga-page a {
-  color: #2D5A27;
+.hinga-copy a {
+  color: #2d5a27;
 }
 
-.hinga-fact {
-  margin-top: 0.75rem;
-  font-size: 0.9rem;
-  color: #2D5A27;
-}
-
-.hinga-figure {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  aspect-ratio: 16 / 9;
-  min-height: 16rem;
-  margin-top: 3rem;
-  border: 1px solid #E1E5DE;
-  border-radius: 12px;
-  background-color: #FBFCFA;
-  color: #233122;
-  font-size: 0.875rem;
-}
-
-.hinga-more {
+.hinga-panel {
   margin-top: 2.5rem;
+  max-width: 42rem;
+  padding: 1rem 1.25rem;
+  border-radius: 12px;
+  background-color: rgba(35, 49, 34, 0.1);
 }
 
-.hinga-more p {
-  color: #233122;
+.hinga-panel h3 {
+  font-size: 1.1rem;
 }
 
-.hinga-more h2 {
-  margin-top: 1.5rem;
-}
-
-.hinga-more p {
+.hinga-panel p {
   margin-top: 0.75rem;
 }
 
-.hinga-link {
-  display: inline-block;
-  margin-top: 1.5rem;
-  font-weight: 600;
+/* 3 — Traceability: dark scene, the branch photograph beside the copy. */
+
+.hinga-scene-trace {
+  background:
+    radial-gradient(42rem 30rem at 92% 78%, rgba(45, 90, 39, 0.2), transparent 70%),
+    radial-gradient(50rem 34rem at 78% 42%, rgba(22, 78, 71, 0.45), transparent 70%),
+    linear-gradient(180deg, #f3f5f0 0%, var(--hinga-ink) 22%);
+  color: var(--hinga-warm-white);
 }
 
-/* ------------------------------------------------------------------
-   Phase 3 — HINGA pinned scroll story
-   ------------------------------------------------------------------ */
-
-/* Static base (no JS / reduced motion): a normal section — the three
-   beats stack and read top to bottom; the chart is parked beside them. Nothing pins, nothing moves. */
-
-.hinga-story {
-  margin-top: 3rem;
-}
-
-.hinga-story-card {
+.hinga-trace-inner {
   display: grid;
-  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
-  gap: 2rem 3rem;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.75fr);
+  gap: 2rem;
   align-items: center;
-  padding: clamp(1.75rem, 4vw, 3rem);
-  border: 1px solid #E1E5DE;
-  border-radius: 16px;
-  background-color: #FBFCFA;
+  max-width: 60rem;
 }
 
-.hinga-beat {
-  margin-top: 2.75rem;
+@media (max-width: 47.99rem) {
+  .hinga-trace-inner {
+    grid-template-columns: 1fr;
+  }
 }
 
-.hinga-beat:first-child {
-  margin-top: 0;
-}
-
-.hinga-beat-label {
-  font-size: 0.875rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #2D5A27;
-}
-
-.hinga-beat-text {
-  margin-top: 0.6rem;
-  max-width: 34rem;
-  color: #233122;
-}
-
-/* The labelled chart placeholder waits for real metrics. */
-
-.hinga-story-side {
-  display: grid;
-  gap: 1.25rem;
-  align-content: center;
-}
-
-.hinga-chart {
-  padding: 1.1rem 1.25rem;
-  border: 1px solid #E1E5DE;
+.hinga-trace-photo {
+  margin: 2.5rem 0 0;
   border-radius: 12px;
-  background-color: #FFFFFF;
+  overflow: hidden;
 }
 
-.hinga-chart-bars {
-  display: grid;
-  gap: 0.55rem;
+.hinga-trace-photo img {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
-.hinga-chart-bar {
-  height: 0.65rem;
-  border-radius: 999px;
-  background-color: #E1E5DE;
-}
+/* 4 — Sign up: light scene, two ways in, short form card. */
 
-.hinga-chart-bar--mid {
-  width: 68%;
-}
-
-.hinga-chart-bar--short {
-  width: 42%;
-}
-
-.hinga-chart figcaption {
-  margin-top: 0.8rem;
-  font-size: 0.8rem;
+.hinga-scene-signup {
+  background:
+    radial-gradient(48rem 32rem at 86% 82%, rgba(22, 78, 71, 0.18), transparent 70%),
+    linear-gradient(180deg, var(--hinga-ink) 0%, #f3f5f0 22%);
   color: #233122;
 }
 
-/* Motion state — lives under html.js-hinga-story, a class the inline
-   script in page.js adds during HTML parsing (pre-paint) and the
-   HingaStory effect removes whenever it does not pin. The card becomes
-   a full-viewport panel and the three beats share one fixed-height box
-   (absolute, centred), so the pinned card never reflows while they
-   scrub past. Transform and opacity only. The first beat is the
-   visible start state; the other two sit at the scrub from-state. */
-
-html.js-hinga-story .hinga-story-card {
-  min-height: 100vh;
-  min-height: 100svh;
+.hinga-signup-inner {
+  max-width: 46rem;
 }
 
-html.js-hinga-story .hinga-beats {
+.hinga-cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.hinga-cta-note {
+  margin: 0;
+  color: #233122;
+}
+
+.hinga-signup-card {
+  margin-top: 2.5rem;
+  max-width: 34rem;
+  padding: 1.5rem;
+  border: 1px solid #e1e5de;
+  border-radius: 16px;
+  background-color: #ffffff;
+}
+
+.hinga-signup-card h3 {
+  font-size: 1.2rem;
+}
+
+.hinga-signup-card > p {
+  margin-top: 0.6rem;
+  color: #233122;
+}
+
+/* Form */
+
+.hinga-form {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+.hinga-form-roles {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.hinga-form-roles legend {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #233122;
+}
+
+.hinga-role-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.6rem;
+}
+
+.hinga-role {
   position: relative;
-  min-height: 14rem;
 }
 
-html.js-hinga-story .hinga-beat {
+.hinga-role input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.hinga-role span {
+  display: inline-block;
+  padding: 0.5rem 0.9rem;
+  border: 1px solid #e1e5de;
+  border-radius: 999px;
+  background-color: #ffffff;
+  color: #233122;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color var(--dur-fast, 150ms) var(--ease, ease),
+    border-color var(--dur-fast, 150ms) var(--ease, ease);
+}
+
+.hinga-role input:checked + span {
+  border-color: #2d5a27;
+  background-color: rgba(45, 90, 39, 0.12);
+  font-weight: 600;
+}
+
+.hinga-role input:focus-visible + span {
+  outline: 2px solid #2d5a27;
+  outline-offset: 2px;
+}
+
+.hinga-field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.hinga-field > span {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #233122;
+}
+
+.hinga-field input,
+.hinga-field textarea {
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #e1e5de;
+  border-radius: 10px;
+  background-color: #ffffff;
+  color: #233122;
+  font-family: inherit;
+  font-size: 0.95rem;
+}
+
+.hinga-field input:focus-visible,
+.hinga-field textarea:focus-visible {
+  outline: 2px solid #2d5a27;
+  outline-offset: 1px;
+}
+
+.hinga-form .hinga-button {
+  justify-self: start;
+}
+
+.hinga-form-note {
+  font-size: 0.85rem;
+  color: #5a6b58;
+}
+
+/* Washes — motion mode only; each scene's own gradient as a fixed layer.
+   The layers are never merged: each keeps its scene's exact recipe, and the
+   scenes' static gradients stay in place as the fallback. */
+
+.hinga-wash {
+  display: none;
+}
+
+.hinga-story-motion .hinga-wash {
+  display: block;
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
+.hinga-wash .wash-layer {
   position: absolute;
   inset: 0;
-  margin-top: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
   opacity: 0;
-  transform: translateY(16px);
-  will-change: opacity, transform;
 }
 
-html.js-hinga-story .hinga-beat--first {
+.wash-hero {
   opacity: 1;
-  transform: translateY(0);
+  background:
+    radial-gradient(46rem 30rem at 82% 18%, rgba(45, 90, 39, 0.45), transparent 70%),
+    radial-gradient(38rem 26rem at 12% 88%, rgba(22, 78, 71, 0.5), transparent 70%),
+    var(--hinga-ink);
 }
 
-html.js-hinga-story .hinga-beat-text {
-  max-width: 36rem;
+.wash-what {
+  background:
+    radial-gradient(52rem 34rem at 88% 30%, rgba(209, 229, 201, 0.55), transparent 70%),
+    #f3f5f0;
 }
 
-@media (max-width: 47.99rem) {
-  html.js-hinga-story .hinga-story-card {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-    align-content: center;
-    padding: 1.5rem;
-  }
-
-  html.js-hinga-story .hinga-beats {
-    min-height: 18rem;
-  }
+.wash-trace {
+  background:
+    radial-gradient(42rem 30rem at 92% 78%, rgba(45, 90, 39, 0.2), transparent 70%),
+    radial-gradient(50rem 34rem at 78% 42%, rgba(22, 78, 71, 0.45), transparent 70%),
+    var(--hinga-ink);
 }
 
-/* Reduced motion: the CSS media override covers paint time (before
-   JS can run), asserting the static, fully readable card; GSAP inline
-   states are cleared by the effect, the !important guards keep the
-   settled card static if a flip races the teardown. */
+.wash-signup {
+  background:
+    radial-gradient(48rem 32rem at 86% 82%, rgba(22, 78, 71, 0.18), transparent 70%),
+    #f3f5f0;
+}
+
+.hinga-story-motion .hinga-scene {
+  background: transparent;
+}
+
+.hinga-story-motion .hinga-scene-hero::before {
+  display: none;
+}
 
 @media (prefers-reduced-motion: reduce) {
-  html.js-hinga-story .hinga-story-card {
-    min-height: 0;
-  }
-
-  html.js-hinga-story .hinga-beats {
-    min-height: 0;
-  }
-
-  html.js-hinga-story .hinga-beat {
-    position: static;
-    inset: auto;
-    display: block;
-    opacity: 1 !important;
-    transform: none !important;
-    will-change: auto;
-  }
-
-  html.js-hinga-story .hinga-beat + .hinga-beat {
-    margin-top: 2.75rem;
+  .hinga-wash {
+    display: none !important;
   }
 }
 
-.hinga-page .page-header::before { background: #164E47; }
-html[data-scene='hinga'], html[data-scene='hinga'] body { background: #F3F5F0; }
-html[data-scene='hinga'] .brand { color: #164E47; }
-html[data-scene='hinga'] .nav-strip { background: #FFFFFF; border: 1px solid #E1E5DE; }
-html[data-scene='hinga'] .strip-dot { color: #005052; }
-html[data-scene='hinga'] .contact-cta { background: #2D5A27; color: #FFFFFF; }
-html[data-scene='hinga'] .site-footer { background: #F3F5F0; }
-html[data-scene='hinga'] .footer-note { color: #233122; }
-@media (max-width: 47.99rem) {
-  .hinga-story-card { grid-template-columns: minmax(0, 1fr); }
+@media (pointer: coarse) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Scene theming for the header and footer on the light scenes; the dark
+   scenes (hero, traceability) ride the site's default dark-theme styling. */
+
+html[data-scene='hinga-what'] .brand,
+html[data-scene='hinga-signup'] .brand {
+  color: #164e47;
+}
+
+html[data-scene='hinga-what'] .nav-strip,
+html[data-scene='hinga-signup'] .nav-strip {
+  background: #ffffff;
+  border: 1px solid #e1e5de;
+}
+
+html[data-scene='hinga-what'] .strip-dot,
+html[data-scene='hinga-signup'] .strip-dot {
+  color: #005052;
+}
+
+html[data-scene='hinga-what'] .contact-cta,
+html[data-scene='hinga-signup'] .contact-cta {
+  background: #2d5a27;
+  color: #ffffff;
+}
+
+html[data-scene='hinga-what'] .site-footer,
+html[data-scene='hinga-signup'] .site-footer {
+  background: #f3f5f0;
+}
+
+html[data-scene='hinga-what'] .footer-note,
+html[data-scene='hinga-signup'] .footer-note {
+  color: #233122;
 }
