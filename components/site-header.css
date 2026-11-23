@@ -522,3 +522,32 @@ html[data-theme='light'] .strip-dot.is-active .dot {
     display: block;
   }
 }
+
+/* /hinga: adroan + HINGA product-line lockup in the top-left corner.
+   Same theme trick as brand-art: white on dark backdrops, teal on light. */
+.brand-hinga-lockup {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+.brand-hinga-lockup .brand-divider {
+  width: 1px;
+  height: 20px;
+  background: currentColor;
+  opacity: 0.4;
+}
+.brand-hinga-lockup .brand-hinga {
+  display: block;
+  width: 42px;
+  height: 21px;
+  background: url('/brand/hinga-logo-white.svg') center / contain no-repeat;
+}
+html[data-header-backdrop='light'] .site-header .brand-hinga-lockup .brand-hinga {
+  background-image: url('/brand/hinga-logo.svg');
+}
+@media (max-width: 47.99rem) {
+  .site-header .brand-hinga-lockup .brand-divider,
+  .site-header .brand-hinga-lockup .brand-hinga {
+    display: none;
+  }
+}
