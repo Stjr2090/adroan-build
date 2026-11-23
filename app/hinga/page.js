@@ -44,7 +44,6 @@ export default function HingaPage() {
               <br />
               <span className="hinga-hero-line">from farmers to markets.</span>
             </h1>
-            <p className="hinga-hero-sub">HINGA is Adroan&rsquo;s agriculture project.</p>
             <a
               className="hinga-button"
               href="https://hingaai.tech"
