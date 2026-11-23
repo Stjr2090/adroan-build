@@ -36,12 +36,13 @@ export default function RootLayout({ children }) {
           dangerouslySetInnerHTML={{
             __html:
               "(function(){var p=location.pathname.replace(/\\/+$/,'').replace(/^\\/+/,'')||'landing';" +
+              "if(p==='hinga')p='hinga-hero';" +
               "var r=document.documentElement;" +
               "r.setAttribute('data-scene',p);" +
-              "r.setAttribute('data-theme',['about','team','contact','hinga'].indexOf(p)!==-1?'light':'dark');" +
+              "r.setAttribute('data-theme',['about','team','contact','hinga-what','hinga-signup'].indexOf(p)!==-1?'light':'dark');" +
               "r.setAttribute('data-strip',p==='landing'&&window.matchMedia('(min-width: 48rem)').matches?'names':'dots');" +
               "var h=location.hash.replace('#','');" +
-              "r.setAttribute('data-header-backdrop',p==='landing'?(h==='projects'?'light':'dark'):(['about','team','contact','hinga'].indexOf(p)!==-1?'light':'dark'));})();",
+              "r.setAttribute('data-header-backdrop',p==='landing'?(h==='projects'?'light':'dark'):(['about','team','contact','hinga-what','hinga-signup'].indexOf(p)!==-1?'light':'dark'));})();",
           }}
         />
         <SiteHeader />
@@ -53,7 +54,7 @@ export default function RootLayout({ children }) {
             <a href="mailto:hello@adroan.tech">hello@adroan.tech</a>
             <a href="tel:+256787728020">+256787728020</a>
             <a href="https://hingaai.tech" target="_blank" rel="noopener noreferrer">HINGA</a>
-            <p className="footer-note">Photo: Robin Kutesa on Unsplash</p>
+            <p className="footer-note">Photos: Robin Kutesa and Michael Starkie on Unsplash</p>
           </div>
         </footer>
         <SmoothScroll />

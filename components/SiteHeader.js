@@ -14,7 +14,20 @@ const SECTIONS = [
   { id: 'team', label: 'Team' },
 ];
 
-const LIGHT_SCENES = ['about', 'team', 'contact', 'hinga'];
+const PAGE_SECTIONS = {
+  '/hinga': [
+    { id: 'hinga-what', label: 'What it does' },
+    { id: 'hinga-trace', label: 'Traceability' },
+    { id: 'hinga-signup', label: 'Sign up' },
+  ],
+};
+
+const LIGHT_SCENES = ['about', 'team', 'contact', 'hinga-what', 'hinga-signup'];
+
+// Header-backdrop special cases per scene id: light scenes share the
+// About/Team hysteresis, the HINGA dark scenes share the Projects one.
+const LIGHT_HEADER_SCENES = ['about', 'team', 'hinga-what', 'hinga-signup'];
+const DARK_HEADER_SCENES = ['projects', 'hinga-hero', 'hinga-trace'];
 
 // Each scene's pill palette is fixed by its own theme (About/Team are light,
 // Projects dark). Marking that on the dot itself keeps the pill colours
@@ -22,8 +35,13 @@ const LIGHT_SCENES = ['about', 'team', 'contact', 'hinga'];
 const sceneTheme = (id) => (LIGHT_SCENES.includes(id) ? 'light' : 'dark');
 
 // Normalise a pathname to a scene id: '/contact' -> 'contact', '/' -> 'landing'.
-const sceneFromPath = (path) =>
-  path === '/' ? 'landing' : path.replace(/^\//, '');
+// '/hinga' resolves to its first scene so the parse-time attributes, the
+// initial React state and the first wash all agree.
+const sceneFromPath = (path) => {
+  if (path === '/') return 'landing';
+  const base = path.replace(/^\/+/, '');
+  return base === 'hinga' ? 'hinga-hero' : base;
+};
 
 // Header art follows the backdrop under the fixed header, not the scene theme.
 // Motion mode crossfades one full-viewport wash layer, so the scene theme is
@@ -45,11 +63,11 @@ function syncHeaderBackdrop() {
     const top = current.getBoundingClientRect().top + window.scrollY;
     const edge = top + (current.offsetHeight || window.innerHeight) * 0.22;
     const state = root.dataset.headerBackdrop;
-    if (current.id === 'projects') {
+    if (DARK_HEADER_SCENES.includes(current.id)) {
       next = state === 'light' ? (y > edge + 4 ? 'dark' : 'light')
         : state === 'dark' ? (y < edge - 4 ? 'light' : 'dark')
           : (y < edge ? 'light' : 'dark');
-    } else if (current.id === 'about' || current.id === 'team') {
+    } else if (LIGHT_HEADER_SCENES.includes(current.id)) {
       next = state === 'dark' ? (y > edge + 4 ? 'light' : 'dark')
         : state === 'light' ? (y < edge - 4 ? 'dark' : 'light')
           : (y < edge ? 'dark' : 'light');
@@ -100,6 +118,10 @@ export default function SiteHeader() {
 
   const dotsMode = isHome ? !(scene === 'landing' && wide) : true;
 
+  // Sub-pages can own the strip: /hinga's dots track its own scenes.
+  const sections = PAGE_SECTIONS[pathname] || SECTIONS;
+  const hasPageSections = Boolean(PAGE_SECTIONS[pathname]);
+
   // Scene attributes commit pre-paint (useLayoutEffect, declared before the
   // measurement effect) so a morph's first painted frame already carries the
   // new data-theme / data-strip and the theme attributes can never lead or
@@ -147,7 +169,7 @@ export default function SiteHeader() {
     if (reducedMotion) return undefined;
     const measure = () => {
       const next = {};
-      SECTIONS.forEach((section) => {
+      sections.forEach((section) => {
         const pill = itemRefs.current[section.id];
         const sizer = sizerRefs.current[section.id];
         const dot = pill && pill.querySelector('.dot');
@@ -177,8 +199,8 @@ export default function SiteHeader() {
       });
       setPillWidths((prev) => {
         const same =
-          Object.keys(next).length === SECTIONS.length &&
-          SECTIONS.every(
+          Object.keys(next).length === sections.length &&
+          sections.every(
             (s) =>
               prev[s.id] &&
               prev[s.id].idle === next[s.id].idle &&
@@ -192,7 +214,7 @@ export default function SiteHeader() {
     window.addEventListener('resize', measure);
     document.fonts.ready.then(measure).catch(() => {});
     return () => window.removeEventListener('resize', measure);
-  }, [dotsMode, scene, reducedMotion]);
+  }, [dotsMode, scene, reducedMotion, pathname]);
 
   useEffect(() => {
     const mq = window.matchMedia('(min-width: 48rem)');
@@ -214,10 +236,23 @@ export default function SiteHeader() {
 
   useEffect(() => {
     if (!isHome) {
-      // Separate pages: fixed scene, no active section.
+      // Separate pages: fixed scene until the page's own story publishes one
+      // (HINGA's scenes do), then track it so theme, backdrop and dots move
+      // together with the page's washes.
+      const onScene = (event) => {
+        const id = event.detail;
+        const root = document.documentElement;
+        root.setAttribute('data-scene', id);
+        root.setAttribute('data-theme', sceneTheme(id));
+        root.setAttribute('data-strip', 'dots');
+        syncHeaderBackdrop();
+        setScene(id);
+        setDotActive(id);
+      };
+      window.addEventListener('adroan:scene', onScene);
       setScene(sceneFromPath(pathname));
       setDotActive(null);
-      return undefined;
+      return () => window.removeEventListener('adroan:scene', onScene);
     }
     // Motion mode: HomeStory publishes the scene on the wash frame, so the
     // header, strip and backdrop change together with the gradient landing.
@@ -278,7 +313,7 @@ export default function SiteHeader() {
     }
   };
 
-  const sectionHref = (id) => (isHome ? `#${id}` : `/#${id}`);
+  const sectionHref = (id) => (isHome || hasPageSections ? `#${id}` : `/#${id}`);
 
   return (
     <header className="site-header">
@@ -294,7 +329,7 @@ export default function SiteHeader() {
               and every client first render stay structurally identical — a
               motion-dependent structure caused hydration #418/#423 for
               reduced-motion clients. */}
-          {SECTIONS.map((section) => (
+          {sections.map((section) => (
             <span
               key={`sizer-${section.id}`}
               className="label-sizer"
@@ -308,16 +343,16 @@ export default function SiteHeader() {
           ))}
 
           <div className="strip-names">
-            {SECTIONS.map((section, index) => (
+            {sections.map((section, index) => (
               <Fragment key={section.id}>
                 <Link
                   className="strip-item"
                   href={sectionHref(section.id)}
-                  onClick={(event) => isHome && scrollToSection(event, section.id)}
+                  onClick={(event) => (isHome || hasPageSections) && scrollToSection(event, section.id)}
                 >
                   {section.label}
                 </Link>
-                {index < SECTIONS.length - 1 && (
+                {index < sections.length - 1 && (
                   <span className="strip-sep" aria-hidden="true">
                     ·
                   </span>
@@ -327,7 +362,7 @@ export default function SiteHeader() {
           </div>
 
           <div className="strip-dots">
-            {SECTIONS.map((section) => {
+            {sections.map((section) => {
               const active = dotActive === section.id;
               const exiting =
                 !reducedMotion && exitingId === section.id && !active;
@@ -366,7 +401,7 @@ export default function SiteHeader() {
                   aria-current={active ? 'location' : undefined}
                   href={sectionHref(section.id)}
                   onClick={(event) =>
-                    isHome && scrollToSection(event, section.id)
+                    (isHome || hasPageSections) && scrollToSection(event, section.id)
                   }
                 >
                   <span className="dot" aria-hidden="true" />
