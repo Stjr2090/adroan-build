@@ -67,20 +67,20 @@ export default function HingaScenes() {
       gsap.fromTo('.hinga-hero-photo', { autoAlpha: 1 }, {
         autoAlpha: 0,
         ease: 'none',
-        scrollTrigger: { trigger: '#hinga-hero', start: 'top top', end: 'bottom top', scrub: true },
+        scrollTrigger: { trigger: '#hinga-hero', start: 'top top', end: 'bottom 45%', scrub: true },
       });
       gsap.to('.hinga-hero-copy', {
         y: -16,
         opacity: 0,
         ease: 'none',
-        scrollTrigger: { trigger: '#hinga-hero', start: 'top top', end: 'bottom 20%', scrub: true },
+        scrollTrigger: { trigger: '#hinga-hero', start: 'top top', end: 'bottom 55%', scrub: true },
       });
       scenes.slice(1).forEach((scene, index) => {
         gsap.fromTo(layers[index + 1], { opacity: 0 }, {
           opacity: 1,
           immediateRender: false,
           ease: 'none',
-          scrollTrigger: { trigger: scene, start: 'top bottom', end: 'top 60%', scrub: true },
+          scrollTrigger: { trigger: scene, start: 'top 72%', end: 'top 45%', scrub: true },
         });
         const targets = scene.querySelectorAll(
           '.hinga-scene-title, .hinga-copy > p, .hinga-panel, .hinga-trace-photo, .hinga-cta-row > *, .hinga-signup-card'
@@ -90,11 +90,11 @@ export default function HingaScenes() {
           opacity: 1,
           stagger: 0.06,
           ease: 'none',
-          scrollTrigger: { trigger: scene, start: 'top 60%', end: 'top 15%', scrub: true },
+          scrollTrigger: { trigger: scene, start: 'top 40%', end: 'top 12%', scrub: true },
         });
         ScrollTrigger.create({
           trigger: scene,
-          start: 'top 60%',
+          start: 'top 40%',
           end: 'bottom top',
           onEnter: () => publish(scene.id),
           onLeaveBack: () => publish(scenes[index].id),

@@ -16,7 +16,7 @@ const SECTIONS = [
 
 const PAGE_SECTIONS = {
   '/hinga': [
-    { id: 'hinga-what', label: 'What it does' },
+    { id: 'hinga-what', label: 'Ask' },
     { id: 'hinga-trace', label: 'Traceability' },
     { id: 'hinga-signup', label: 'Sign up' },
   ],
