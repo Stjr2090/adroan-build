@@ -63,7 +63,7 @@ export default function HingaPage() {
           <div className="hinga-copy">
             <p>
               Planting, disease, weather, markets. The answers come back in English, Luganda and
-              Runyankole, in the language the question was asked in.
+              Runyankole.
             </p>
             <p>
               Live at{' '}
