@@ -121,6 +121,7 @@ export default function SiteHeader() {
   // Sub-pages can own the strip: /hinga's dots track its own scenes.
   const sections = PAGE_SECTIONS[pathname] || SECTIONS;
   const hasPageSections = Boolean(PAGE_SECTIONS[pathname]);
+  const isHinga = pathname === '/hinga';
 
   // Scene attributes commit pre-paint (useLayoutEffect, declared before the
   // measurement effect) so a morph's first painted frame already carries the
@@ -318,8 +319,14 @@ export default function SiteHeader() {
   return (
     <header className="site-header">
       <div className="site-header-inner">
-        <Link href="/" className="brand" aria-label="Adroan home">
+        <Link href="/" className={`brand${isHinga ? ' brand-hinga-lockup' : ''}`} aria-label="Adroan home">
           <BrandLockup />
+          {isHinga && (
+            <>
+              <span className="brand-divider" aria-hidden="true" />
+              <span className="brand-hinga" aria-hidden="true" />
+            </>
+          )}
         </Link>
 
         <nav ref={navStripRef} className="nav-strip" aria-label="Main navigation">

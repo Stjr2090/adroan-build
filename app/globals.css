@@ -170,7 +170,7 @@ h2 {
   padding: 4.5rem 1.5rem 2rem;
 }
 
-html[data-scene='hinga'] .site-footer {
+html[data-scene^='hinga'] .site-footer {
   background-color: var(--ink);
   padding-top: 2.5rem;
 }
@@ -185,7 +185,7 @@ html[data-scene='hinga'] .site-footer {
   margin-right: 1rem;
 }
 
-html[data-scene='hinga'] .footer-inner a:not(.footer-brand) {
+html[data-scene^='hinga'] .footer-inner a:not(.footer-brand) {
   color: #233122;
 }
 
@@ -267,4 +267,4 @@ html[data-scene='hinga'] .footer-inner a:not(.footer-brand) {
 
 .footer-brand { display: inline-block; color: var(--warm-white); padding: 6px 2px; margin-bottom: 1rem; }
 .footer-brand .brand-art { width: 98px; height: 44px; background: url('/brand/logo-white.svg') center / contain no-repeat; }
-html[data-scene='hinga'] .footer-brand .brand-art { background-image: url('/brand/logo-primary.svg'); }
+html[data-scene^='hinga'] .footer-brand .brand-art { background-image: url('/brand/logo-primary.svg'); }
